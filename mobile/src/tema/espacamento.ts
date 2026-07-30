@@ -4,12 +4,13 @@ export const Espacamentos = {
   grande: 24,
   gigante: 32,
 
-  // espacamentos internos
   paddingPequeno: 12,
   paddingMedio: 16,
   paddingGrande: 24,
 
-  // margens da tela
-  margemHorizontal: 20,
+  margemHorizontal: 22,
   margemVertical: 24,
+
+  campoHorizontal: 7,
+  cardHorizontal: 21,
 };

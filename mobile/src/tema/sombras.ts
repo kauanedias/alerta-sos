@@ -3,55 +3,46 @@ import { Platform } from 'react-native';
 export const Sombras = {
   leve: Platform.select({
     ios: {
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.08,
-      shadowRadius: 4,
+      shadowColor: '#2E7DF5',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.09,
+      shadowRadius: 9,
     },
     android: {
       elevation: 2,
     },
     web: {
-      boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
+      boxShadow: '0px 4px 9px rgba(46, 125, 245, 0.09)',
     },
   }),
 
   media: Platform.select({
     ios: {
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-      shadowOpacity: 0.12,
-      shadowRadius: 8,
+      shadowColor: '#2E7DF5',
+      shadowOffset: { width: 0, height: 12 },
+      shadowOpacity: 0.23,
+      shadowRadius: 17,
     },
     android: {
-      elevation: 5,
+      elevation: 7,
     },
     web: {
-      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.12)',
+      boxShadow: '0px 12px 17px rgba(46, 125, 245, 0.23)',
     },
   }),
 
   forte: Platform.select({
     ios: {
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 8,
-      },
-      shadowOpacity: 0.16,
-      shadowRadius: 16,
+      shadowColor: '#3C638E',
+      shadowOffset: { width: 0, height: 16 },
+      shadowOpacity: 0.11,
+      shadowRadius: 30,
     },
     android: {
-      elevation: 10,
+      elevation: 8,
     },
     web: {
-      boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.16)',
+      boxShadow: '0px 16px 30px rgba(60, 99, 142, 0.11)',
     },
   }),
 };
