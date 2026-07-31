@@ -1,6 +1,12 @@
 export { Botao } from './Botao';
 export { BotaoSocial } from './BotaoSocial';
+export { CabecalhoAuth } from './CabecalhoAuth';
+export { CampoMultilinha } from './CampoMultilinha';
 export { CampoTexto } from './CampoTexto';
 export { Card } from './Card';
+export { CardInformacao } from './CardInformacao';
 export { Checkbox } from './Checkbox';
+export { CodigoVerificacao } from './CodigoVerificacao';
+export { ProgressoCadastro } from './ProgressoCadastro';
+export { SeletorOpcao } from './SeletorOpcao';
 export { Separador } from './Separador';
