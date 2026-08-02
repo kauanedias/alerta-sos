@@ -1,6 +1,7 @@
 export { Botao } from './Botao';
 export { BotaoSocial } from './BotaoSocial';
 export { CabecalhoAuth } from './CabecalhoAuth';
+export { CampoDataNascimento } from './CampoDataNascimento';
 export { CampoMultilinha } from './CampoMultilinha';
 export { CampoTexto } from './CampoTexto';
 export { Card } from './Card';

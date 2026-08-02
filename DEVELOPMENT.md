@@ -82,3 +82,18 @@
 
 ### Próximo passo
 - Perfil Pessoal.
+
+
+## 01/08/2026
+
+### Concluído
+- Tela de Perfil Pessoal desenvolvida.
+- Integração com seleção de foto de perfil (Image Picker).
+- Componente reutilizável `CampoDataNascimento`.
+- Evolução do componente `CampoTexto` com suporte a diferentes tipos de entrada.
+- Validação de altura e peso.
+- Melhorias na experiência do formulário.
+- Ajustes visuais e refinamento da interface.
+
+### Próximo passo
+- Tela de Perfil de Saúde.

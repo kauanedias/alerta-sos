@@ -47,6 +47,8 @@ export default function CadastroScreen() {
   const [erroSenha, setErroSenha] = useState('');
   const [erroConfirmacao, setErroConfirmacao] = useState('');
   const [erroTermos, setErroTermos] = useState('');
+  const [erroAltura, setErroAltura] = useState('');
+  const [erroPeso, setErroPeso] = useState('');
 
   const entradaCard = useRef(new Animated.Value(0)).current;
 
