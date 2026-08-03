@@ -11,12 +11,13 @@
 - [x] Tela de Cadastro
 - [x] Verificação de E-mail
 - [x] Tela de Boas-vindas
+- [x] Perfil Pessoal
+- [x] Perfil de Saúde
+- [x] Contatos de Emergência
+- [x] Permissões
+- [x] Tela de Cadastro Concluído
 
-- [ ] Perfil Pessoal
-- [ ] Perfil de Saúde
-- [ ] Contatos de Emergência
-- [ ] Permissões
-- [ ] Recuperação de senha
+
 - [ ] Tela Principal
 - [ ] Tela SOS
 - [ ] Histórico de Alertas
