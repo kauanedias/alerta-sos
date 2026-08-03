@@ -1,6 +1,5 @@
 import {
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -37,11 +36,7 @@ export function SeletorOpcao({
     <View style={styles.container}>
       <Text style={styles.titulo}>{titulo}</Text>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.lista}
-      >
+      <View style={styles.lista}>
         {opcoes.map((opcao) => {
           const selecionada =
             valorSelecionado === opcao.valor;
@@ -68,7 +63,7 @@ export function SeletorOpcao({
             </Pressable>
           );
         })}
-      </ScrollView>
+      </View>
 
       {erro ? (
         <Text style={styles.erro}>{erro}</Text>
@@ -93,16 +88,18 @@ const styles = StyleSheet.create({
   },
 
   lista: {
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: Espacamentos.pequeno,
-    paddingRight: Espacamentos.medio,
   },
 
   opcao: {
-    minWidth: 54,
     minHeight: 46,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: Espacamentos.paddingMedio,
+    paddingVertical: 10,
     borderRadius: Bordas.grande,
     borderWidth: 1,
     borderColor: Cores.bordaCampo,
@@ -118,6 +115,7 @@ const styles = StyleSheet.create({
     fontSize: Tipografia.textoPequeno,
     fontWeight: Tipografia.pesoExtraBold,
     color: Cores.textoSecundario,
+    textAlign: 'center',
   },
 
   textoOpcaoSelecionada: {

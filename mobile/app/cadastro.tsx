@@ -215,11 +215,11 @@ export default function CadastroScreen() {
       });
 
       router.replace({
-      pathname: '/verificar-email',
-      params: {
-      email: email.trim(),
-  },
-});    
+        pathname: '/verificar-email',
+        params: {
+          email: email.trim(),
+        },
+      });
     }, 1600);
   }
 
@@ -268,7 +268,6 @@ export default function CadastroScreen() {
           contentContainerStyle={styles.conteudo}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator
-          nestedScrollEnabled
         >
           <Pressable
             onPress={() => router.back()}
@@ -298,19 +297,7 @@ export default function CadastroScreen() {
             }
           />
 
-          <Animated.View
-            style={{
-              opacity: entradaCard,
-              transform: [
-                {
-                  translateY: entradaCard.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [45, 0],
-                  }),
-                },
-              ],
-            }}
-          >
+          <View>
             <Card>
               <View style={styles.cabecalhoCard}>
                 <View style={styles.areaTituloCard}>
@@ -594,7 +581,7 @@ export default function CadastroScreen() {
                 </Pressable>
               </View>
             </Card>
-          </Animated.View>
+          </View>
 
           <View style={styles.rodape}>
             <View style={styles.escudoRodape}>

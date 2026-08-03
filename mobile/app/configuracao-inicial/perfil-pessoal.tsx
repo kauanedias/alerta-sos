@@ -226,7 +226,7 @@ export default function PerfilPessoalScreen() {
       !apelidoValido ||
       !dataValida ||
       !alturaValida ||
-        !pesoValido
+      !pesoValido
     ) {
       return;
     }
@@ -239,8 +239,7 @@ export default function PerfilPessoalScreen() {
       console.log({
         nomeCompleto: nomeCompleto.trim(),
         apelido: apelido.trim(),
-        dataNascimento:
-          dataNascimento?.toISOString(),
+        dataNascimento: dataNascimento?.toISOString(),
         idade: dataNascimento
           ? calcularIdade(dataNascimento)
           : null,
@@ -250,12 +249,16 @@ export default function PerfilPessoalScreen() {
         fotoPerfil,
       });
 
-      router.push(
-        '/configuracao-inicial/perfil-saude',
-      );
+      router.push({
+        pathname:
+          '/configuracao-inicial/apresentacao-luma',
+
+        params: {
+          nome: apelido.trim(),
+        },
+      });
     }, 1200);
   }
-
   return (
     <View style={styles.container}>
       <StatusBar

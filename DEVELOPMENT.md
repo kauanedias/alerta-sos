@@ -97,3 +97,34 @@
 
 ### Próximo passo
 - Tela de Perfil de Saúde.
+
+
+## 03/08/2026
+
+### Concluído
+- Tela de Perfil de Saúde desenvolvida.
+- Inclusão de alergias, condições de saúde, medicamentos, mobilidade e informações de segurança.
+- Mini resumo das informações de saúde.
+- Integração das mensagens programadas da Luma ao fluxo de configuração.
+- Tela de apresentação da Luma desenvolvida.
+- Tela de Rede de Apoio desenvolvida.
+- Cadastro estruturado de contatos de emergência.
+- Definição da prioridade dos contatos.
+- Inclusão de informações como proximidade e acesso à residência.
+- Resumo da rede de apoio.
+- Tela de Permissões desenvolvida.
+- Validação das permissões essenciais.
+- Tela animada de cadastro concluído desenvolvida.
+- Melhorias nos componentes reutilizáveis.
+- Ajustes de responsividade e rolagem nas telas.
+
+### Em análise
+- No Expo Go para Android, os campos da tela de cadastro ficam piscando e alternando o foco entre si ao abrir o teclado.
+- O problema não acontece na versão web.
+- A animação do formulário foi removida como teste, mas o comportamento continuou.
+
+### Próximos passos
+- Investigar o conflito de foco dos campos no Android.
+- Testar a desativação do preenchimento automático.
+- Revisar o controle de foco do componente `CampoTexto`.
+- Criar a tela principal do AlertaSOS.
