@@ -16,18 +16,17 @@
 - [x] Contatos de Emergência
 - [x] Permissões
 - [x] Tela de Cadastro Concluído
+- [x] Tela Principal
 
 
-- [ ] Tela Principal
-- [ ] Tela SOS
+- [ ] Integração com API
+- [ ] Banco de Dados
 - [ ] Histórico de Alertas
 - [ ] Geolocalização
 - [ ] Compartilhamento de Localização
 - [ ] Notificações Push
 - [ ] Envio de SMS
 - [ ] Integração com IA
-- [ ] Integração com API
-- [ ] Banco de Dados
 - [ ] Smartwatch
 - [ ] Testes
 - [ ] Publicação na Play Store
@@ -129,3 +128,26 @@
 - Testar a desativação do preenchimento automático.
 - Revisar o controle de foco do componente `CampoTexto`.
 - Criar a tela principal do AlertaSOS.
+
+
+## 04/08/2026
+
+### Concluído
+- Fluxo completo de configuração inicial finalizado.
+- Tela principal do AlertaSOS criada.
+- Botão SOS em destaque adicionado à tela principal.
+- Atalhos para localização, rede de apoio, histórico e perfil adicionados.
+- Navegação inferior inicial criada.
+- Animação de entrada da tela de cadastro restaurada após teste no Android.
+
+### Em análise
+- No Expo Go para Android, os campos da tela de cadastro piscam e o foco alterna entre eles ao abrir o teclado.
+- O problema não acontece na versão Web.
+- A remoção da animação do formulário não resolveu o problema.
+- O próximo teste será investigar o preenchimento automático do Android e o controle de foco do componente `CampoTexto`.
+
+### Próximos passos
+- Corrigir o conflito de foco dos campos no Expo Go para Android.
+- Refinar e testar a tela principal.
+- Criar o fluxo real de acionamento do SOS.
+- Criar as telas de Histórico, Localização e Perfil.
