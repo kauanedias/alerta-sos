@@ -151,3 +151,11 @@
 - Refinar e testar a tela principal.
 - Criar o fluxo real de acionamento do SOS.
 - Criar as telas de Histórico, Localização e Perfil.
+
+
+## 04/08/2026 (Atualização)
+
+### Correções
+- Corrigido erro de renderização no Android ao navegar para a tela de Perfil de Saúde.
+- Identificada a utilização da tag HTML `<br>`, que funciona na Web, mas não é suportada pelo React Native.
+- O espaçamento entre componentes passou a ser tratado utilizando `View`, `margin` e `padding`, seguindo o padrão do React Native.

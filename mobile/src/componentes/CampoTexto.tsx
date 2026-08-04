@@ -279,10 +279,9 @@ const styles = StyleSheet.create({
   },
 
   campoFocado: {
-    borderColor: Cores.bordaCampoFocado,
-    backgroundColor: Cores.fundo,
-    ...Sombras.leve,
-  },
+  borderColor: Cores.bordaCampoFocado,
+  backgroundColor: Cores.fundo,
+},
 
   campoComErro: {
     borderColor: Cores.erroBorda,

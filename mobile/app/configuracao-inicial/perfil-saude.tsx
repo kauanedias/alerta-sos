@@ -374,7 +374,7 @@ export default function PerfilSaudeScreen() {
                                 Mobilidade e comunicação
                             </Text>
 
-                            <br></br>
+                            
 
                             <MensagemLuma
                                 texto="Essas respostas me ajudam a entender como você se comunica e se locomove caso precise de ajuda."
