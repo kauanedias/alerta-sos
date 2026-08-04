@@ -286,11 +286,16 @@ export default function CadastroConcluidoScreen() {
     });
 
   function entrarNoAplicativo() {
-    console.log('Cadastro concluído');
+  console.log('Cadastro concluído');
 
-    // Depois trocaremos pela rota da Home.
-    router.replace('/');
-  }
+  router.replace({
+    pathname: '/home',
+
+    params: {
+      nome: nomePreferido,
+    },
+  });
+}
 
   return (
     <View style={styles.tela}>

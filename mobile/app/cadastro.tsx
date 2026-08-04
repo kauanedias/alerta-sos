@@ -297,291 +297,305 @@ export default function CadastroScreen() {
             }
           />
 
-          <View>
+          <Animated.View
+            style={{
+              opacity: entradaCard,
+              transform: [
+                {
+                  translateY: entradaCard.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [45, 0],
+                  }),
+                },
+              ],
+            }}
+          >
             <Card>
-              <View style={styles.cabecalhoCard}>
-                <View style={styles.areaTituloCard}>
-                  <Text style={styles.tituloCard}>
-                    Dados de acesso
-                  </Text>
-
-                  <Text style={styles.subtituloCard}>
-                    Preencha as informações para criar sua conta
-                  </Text>
-                </View>
-
-                <View style={styles.iconeSeguranca}>
-                  <Ionicons
-                    name="shield-checkmark-outline"
-                    size={24}
-                    color={Cores.primaria}
-                  />
-                </View>
-              </View>
-
-              <CampoTexto
-                rotulo="NOME COMPLETO"
-                value={nome}
-                onChangeText={(valor) => {
-                  setNome(valor);
-
-                  if (erroNome) {
-                    setErroNome('');
-                  }
-                }}
-                onBlur={() => {
-                  if (nome) {
-                    validarNome(nome);
-                  }
-                }}
-                placeholder="Digite seu nome completo"
-                autoCapitalize="words"
-                autoCorrect={false}
-                autoComplete="name"
-                returnKeyType="next"
-                erro={erroNome}
-                icone={
-                  <Ionicons
-                    name="person-outline"
-                    size={21}
-                    color={erroNome ? Cores.erro : Cores.primaria}
-                  />
-                }
-              />
-
-              <CampoTexto
-                rotulo="E-MAIL"
-                value={email}
-                onChangeText={(valor) => {
-                  setEmail(valor);
-
-                  if (erroEmail) {
-                    setErroEmail('');
-                  }
-                }}
-                onBlur={() => {
-                  if (email) {
-                    validarEmail(email);
-                  }
-                }}
-                placeholder="voce@exemplo.com"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                autoComplete="email"
-                returnKeyType="next"
-                erro={erroEmail}
-                icone={
-                  <Ionicons
-                    name="mail-outline"
-                    size={21}
-                    color={erroEmail ? Cores.erro : Cores.primaria}
-                  />
-                }
-              />
-
-              <CampoTexto
-                rotulo="SENHA"
-                value={senha}
-                onChangeText={(valor) => {
-                  setSenha(valor);
-
-                  if (erroSenha) {
-                    setErroSenha('');
-                  }
-
-                  if (erroConfirmacao && confirmarSenha === valor) {
-                    setErroConfirmacao('');
-                  }
-                }}
-                onBlur={() => {
-                  if (senha) {
-                    validarSenha(senha);
-                  }
-                }}
-                placeholder="Crie uma senha segura"
-                autoCapitalize="none"
-                autoCorrect={false}
-                autoComplete="new-password"
-                textContentType="newPassword"
-                returnKeyType="next"
-                erro={erroSenha}
-                senha
-                iconeDestacado
-                icone={
-                  <Ionicons
-                    name="lock-closed-outline"
-                    size={21}
-                    color={Cores.fundo}
-                  />
-                }
-              />
-
-              <View style={styles.requisitosSenha}>
-                <Ionicons
-                  name="information-circle-outline"
-                  size={16}
-                  color={Cores.primaria}
-                />
-
-                <Text style={styles.textoRequisitos}>
-                  Use 8 caracteres, uma letra maiúscula e um número.
-                </Text>
-              </View>
-
-              <CampoTexto
-                rotulo="CONFIRMAR SENHA"
-                value={confirmarSenha}
-                onChangeText={(valor) => {
-                  setConfirmarSenha(valor);
-
-                  if (erroConfirmacao) {
-                    setErroConfirmacao('');
-                  }
-                }}
-                onBlur={() => {
-                  if (confirmarSenha) {
-                    validarConfirmacao(confirmarSenha);
-                  }
-                }}
-                placeholder="Digite a senha novamente"
-                autoCapitalize="none"
-                autoCorrect={false}
-                autoComplete="new-password"
-                textContentType="newPassword"
-                returnKeyType="done"
-                onSubmitEditing={cadastrar}
-                erro={erroConfirmacao}
-                senha
-                iconeDestacado
-                icone={
-                  <Ionicons
-                    name="checkmark-circle-outline"
-                    size={21}
-                    color={Cores.fundo}
-                  />
-                }
-              />
-
-              <View style={styles.areaTermos}>
-                <Checkbox
-                  marcado={aceitouTermos}
-                  texto="Li e aceito os termos"
-                  onPress={() => {
-                    setAceitouTermos((valorAtual) => !valorAtual);
-
-                    if (erroTermos) {
-                      setErroTermos('');
-                    }
-                  }}
-                />
-
-                <View style={styles.linksTermos}>
-                  <Pressable
-                    onPress={() =>
-                      console.log('Abrir termos de uso')
-                    }
-                  >
-                    <Text style={styles.linkTermos}>
-                      Termos de Uso
+              <Card>
+                <View style={styles.cabecalhoCard}>
+                  <View style={styles.areaTituloCard}>
+                    <Text style={styles.tituloCard}>
+                      Dados de acesso
                     </Text>
-                  </Pressable>
 
-                  <Text style={styles.separadorTermos}>•</Text>
-
-                  <Pressable
-                    onPress={() =>
-                      console.log('Abrir política de privacidade')
-                    }
-                  >
-                    <Text style={styles.linkTermos}>
-                      Privacidade
-                    </Text>
-                  </Pressable>
-                </View>
-
-                {erroTermos ? (
-                  <View style={styles.areaErroTermos}>
-                    <Ionicons
-                      name="alert-circle-outline"
-                      size={15}
-                      color={Cores.erro}
-                    />
-
-                    <Text style={styles.textoErroTermos}>
-                      {erroTermos}
+                    <Text style={styles.subtituloCard}>
+                      Preencha as informações para criar sua conta
                     </Text>
                   </View>
-                ) : null}
-              </View>
 
-              <Botao
-                titulo="Criar conta"
-                textoCarregando="Criando conta..."
-                onPress={cadastrar}
-                carregando={carregando}
-                iconeDireita={
-                  <Ionicons
-                    name="arrow-forward"
-                    size={18}
-                    color={Cores.fundo}
-                  />
-                }
-              />
+                  <View style={styles.iconeSeguranca}>
+                    <Ionicons
+                      name="shield-checkmark-outline"
+                      size={24}
+                      color={Cores.primaria}
+                    />
+                  </View>
+                </View>
 
-              <Separador texto="OU CADASTRE-SE COM" />
+                <CampoTexto
+                  rotulo="NOME COMPLETO"
+                  value={nome}
+                  onChangeText={(valor) => {
+                    setNome(valor);
 
-              <View style={styles.areaLoginSocial}>
-                <BotaoSocial
-                  titulo="Google"
-                  onPress={() =>
-                    console.log('Cadastro com Google')
-                  }
-                  icone={
-                    <View style={styles.logoGoogle}>
-                      <Text style={styles.letraGoogle}>G</Text>
-                    </View>
-                  }
-                />
-
-                <BotaoSocial
-                  titulo="Apple"
-                  onPress={() =>
-                    console.log('Cadastro com Apple')
-                  }
+                    if (erroNome) {
+                      setErroNome('');
+                    }
+                  }}
+                  onBlur={() => {
+                    if (nome) {
+                      validarNome(nome);
+                    }
+                  }}
+                  placeholder="Digite seu nome completo"
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                  autoComplete="name"
+                  returnKeyType="next"
+                  erro={erroNome}
                   icone={
                     <Ionicons
-                      name="logo-apple"
-                      size={22}
-                      color={Cores.textoEscuro}
+                      name="person-outline"
+                      size={21}
+                      color={erroNome ? Cores.erro : Cores.primaria}
                     />
                   }
                 />
-              </View>
 
-              <View style={styles.areaLogin}>
-                <Text style={styles.textoPossuiConta}>
-                  Já possui uma conta?
-                </Text>
+                <CampoTexto
+                  rotulo="E-MAIL"
+                  value={email}
+                  onChangeText={(valor) => {
+                    setEmail(valor);
 
-                <Pressable
-                  onPress={() => router.replace('/login')}
-                  style={({ pressed }) => [
-                    styles.botaoLogin,
-                    pressed && styles.elementoPressionado,
-                  ]}
-                >
-                  <Text style={styles.textoLogin}>Entrar</Text>
+                    if (erroEmail) {
+                      setErroEmail('');
+                    }
+                  }}
+                  onBlur={() => {
+                    if (email) {
+                      validarEmail(email);
+                    }
+                  }}
+                  placeholder="voce@exemplo.com"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  autoComplete="email"
+                  returnKeyType="next"
+                  erro={erroEmail}
+                  icone={
+                    <Ionicons
+                      name="mail-outline"
+                      size={21}
+                      color={erroEmail ? Cores.erro : Cores.primaria}
+                    />
+                  }
+                />
 
+                <CampoTexto
+                  rotulo="SENHA"
+                  value={senha}
+                  onChangeText={(valor) => {
+                    setSenha(valor);
+
+                    if (erroSenha) {
+                      setErroSenha('');
+                    }
+
+                    if (erroConfirmacao && confirmarSenha === valor) {
+                      setErroConfirmacao('');
+                    }
+                  }}
+                  onBlur={() => {
+                    if (senha) {
+                      validarSenha(senha);
+                    }
+                  }}
+                  placeholder="Crie uma senha segura"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  autoComplete="new-password"
+                  textContentType="newPassword"
+                  returnKeyType="next"
+                  erro={erroSenha}
+                  senha
+                  iconeDestacado
+                  icone={
+                    <Ionicons
+                      name="lock-closed-outline"
+                      size={21}
+                      color={Cores.fundo}
+                    />
+                  }
+                />
+
+                <View style={styles.requisitosSenha}>
                   <Ionicons
-                    name="arrow-forward-outline"
-                    size={17}
+                    name="information-circle-outline"
+                    size={16}
                     color={Cores.primaria}
                   />
-                </Pressable>
-              </View>
+
+                  <Text style={styles.textoRequisitos}>
+                    Use 8 caracteres, uma letra maiúscula e um número.
+                  </Text>
+                </View>
+
+                <CampoTexto
+                  rotulo="CONFIRMAR SENHA"
+                  value={confirmarSenha}
+                  onChangeText={(valor) => {
+                    setConfirmarSenha(valor);
+
+                    if (erroConfirmacao) {
+                      setErroConfirmacao('');
+                    }
+                  }}
+                  onBlur={() => {
+                    if (confirmarSenha) {
+                      validarConfirmacao(confirmarSenha);
+                    }
+                  }}
+                  placeholder="Digite a senha novamente"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  autoComplete="new-password"
+                  textContentType="newPassword"
+                  returnKeyType="done"
+                  onSubmitEditing={cadastrar}
+                  erro={erroConfirmacao}
+                  senha
+                  iconeDestacado
+                  icone={
+                    <Ionicons
+                      name="checkmark-circle-outline"
+                      size={21}
+                      color={Cores.fundo}
+                    />
+                  }
+                />
+
+                <View style={styles.areaTermos}>
+                  <Checkbox
+                    marcado={aceitouTermos}
+                    texto="Li e aceito os termos"
+                    onPress={() => {
+                      setAceitouTermos((valorAtual) => !valorAtual);
+
+                      if (erroTermos) {
+                        setErroTermos('');
+                      }
+                    }}
+                  />
+
+                  <View style={styles.linksTermos}>
+                    <Pressable
+                      onPress={() =>
+                        console.log('Abrir termos de uso')
+                      }
+                    >
+                      <Text style={styles.linkTermos}>
+                        Termos de Uso
+                      </Text>
+                    </Pressable>
+
+                    <Text style={styles.separadorTermos}>•</Text>
+
+                    <Pressable
+                      onPress={() =>
+                        console.log('Abrir política de privacidade')
+                      }
+                    >
+                      <Text style={styles.linkTermos}>
+                        Privacidade
+                      </Text>
+                    </Pressable>
+                  </View>
+
+                  {erroTermos ? (
+                    <View style={styles.areaErroTermos}>
+                      <Ionicons
+                        name="alert-circle-outline"
+                        size={15}
+                        color={Cores.erro}
+                      />
+
+                      <Text style={styles.textoErroTermos}>
+                        {erroTermos}
+                      </Text>
+                    </View>
+                  ) : null}
+                </View>
+
+                <Botao
+                  titulo="Criar conta"
+                  textoCarregando="Criando conta..."
+                  onPress={cadastrar}
+                  carregando={carregando}
+                  iconeDireita={
+                    <Ionicons
+                      name="arrow-forward"
+                      size={18}
+                      color={Cores.fundo}
+                    />
+                  }
+                />
+
+                <Separador texto="OU CADASTRE-SE COM" />
+
+                <View style={styles.areaLoginSocial}>
+                  <BotaoSocial
+                    titulo="Google"
+                    onPress={() =>
+                      console.log('Cadastro com Google')
+                    }
+                    icone={
+                      <View style={styles.logoGoogle}>
+                        <Text style={styles.letraGoogle}>G</Text>
+                      </View>
+                    }
+                  />
+
+                  <BotaoSocial
+                    titulo="Apple"
+                    onPress={() =>
+                      console.log('Cadastro com Apple')
+                    }
+                    icone={
+                      <Ionicons
+                        name="logo-apple"
+                        size={22}
+                        color={Cores.textoEscuro}
+                      />
+                    }
+                  />
+                </View>
+
+                <View style={styles.areaLogin}>
+                  <Text style={styles.textoPossuiConta}>
+                    Já possui uma conta?
+                  </Text>
+
+                  <Pressable
+                    onPress={() => router.replace('/login')}
+                    style={({ pressed }) => [
+                      styles.botaoLogin,
+                      pressed && styles.elementoPressionado,
+                    ]}
+                  >
+                    <Text style={styles.textoLogin}>Entrar</Text>
+
+                    <Ionicons
+                      name="arrow-forward-outline"
+                      size={17}
+                      color={Cores.primaria}
+                    />
+                  </Pressable>
+                </View>
+              </Card>
             </Card>
-          </View>
+          </Animated.View>
 
           <View style={styles.rodape}>
             <View style={styles.escudoRodape}>
