@@ -600,7 +600,11 @@ export default function ContatosEmergenciaScreen() {
                             {contatos.length > 0 ? (
                                 <>
                                     <MensagemLuma
-                                        texto="Perfeito! Sua rede de apoio está pronta. Agora vamos configurar as permissões para que o AlertaSOS funcione corretamente."
+                                        texto={
+                                            contatos.length >= 3
+                                                ? 'Perfeito! Sua rede de apoio está completa. Agora vamos configurar as permissões para que o AlertaSOS funcione corretamente.'
+                                                : `Sua rede de apoio já começou, ${nomePreferido}. Para aumentar sua segurança, recomendo cadastrar pelo menos 3 contatos. Você pode continuar agora e adicionar outras pessoas depois.`
+                                        }
                                     />
 
                                     <View style={styles.espacoMensagem} />

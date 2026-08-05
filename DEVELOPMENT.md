@@ -159,3 +159,27 @@
 - Corrigido erro de renderização no Android ao navegar para a tela de Perfil de Saúde.
 - Identificada a utilização da tag HTML `<br>`, que funciona na Web, mas não é suportada pelo React Native.
 - O espaçamento entre componentes passou a ser tratado utilizando `View`, `margin` e `padding`, seguindo o padrão do React Native.
+
+
+
+
+## 05/08/2026
+
+### Concluído
+
+- Redesign da tela de apresentação da Luma com novas animações e identidade visual.
+- Reformulação completa da tela de cadastro concluído.
+- Ajustes na Home com novos atalhos para Polícia e Ambulância.
+- Criação da tela de integração com Smartwatch.
+- Criação do módulo "Medidas de Proteção".
+- Implementação das telas de Engasgo, Convulsão, Queimaduras e Sangramento.
+- Correção de bugs de interface e componentes.
+- Reorganização da estrutura do projeto (`mobile`, `api` e `docs`).
+- Definição da arquitetura do backend.
+- Escolha das tecnologias da API (Node.js, Express, TypeScript, Prisma e MySQL).
+
+### Próximo passo
+
+- Iniciar a construção da API.
+- Configurar Node.js, Express, TypeScript e Prisma.
+- Conectar a API ao MySQL.

@@ -14,7 +14,6 @@ import {
   Bordas,
   Cores,
   Espacamentos,
-  Sombras,
   Tipografia,
 } from '../tema';
 
@@ -127,7 +126,6 @@ const styles = StyleSheet.create({
   caixaFocada: {
     borderColor: Cores.bordaCampoFocado,
     backgroundColor: Cores.fundo,
-    ...Sombras.leve,
   },
 
   caixaComErro: {

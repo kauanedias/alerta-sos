@@ -13,7 +13,6 @@ import {
   Bordas,
   Cores,
   Espacamentos,
-  Sombras,
   Tipografia,
 } from '../tema';
 
@@ -240,7 +239,6 @@ const styles = StyleSheet.create({
   campoFocado: {
     borderColor: Cores.bordaCampoFocado,
     backgroundColor: Cores.fundo,
-    ...Sombras.leve,
   },
 
   campoComErro: {

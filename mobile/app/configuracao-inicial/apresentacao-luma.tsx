@@ -1,634 +1,1133 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
-    router,
-    useLocalSearchParams,
+  router,
+  useLocalSearchParams,
 } from 'expo-router';
 import { useEffect, useRef } from 'react';
 
 import {
-    Animated,
-    Easing,
-    Platform,
-    Pressable,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    View,
+  Animated,
+  Easing,
+  Platform,
+  Pressable,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 
 import {
-    Botao,
-    MensagemLuma,
-    ProgressoCadastro,
-} from '../../src/componentes';
-
-import {
-    Bordas,
-    Cores,
-    Espacamentos,
-    Sombras,
-    Tipografia,
+  Bordas,
+  Cores,
+  Espacamentos,
+  Tipografia,
 } from '../../src/tema';
 
+type RecursoLumaProps = {
+  titulo: string;
+  icone:
+    | 'person-outline'
+    | 'medical-outline'
+    | 'people-outline';
+  animacao: Animated.Value;
+};
+
 export default function ApresentacaoLumaScreen() {
-    const parametros = useLocalSearchParams<{
-        nome?: string;
-    }>();
+  const parametros = useLocalSearchParams<{
+    nome?: string;
+  }>();
 
-    const nomePreferido =
-        typeof parametros.nome === 'string' &&
-            parametros.nome.trim()
-            ? parametros.nome.trim()
-            : 'você';
+  const nomePreferido =
+    typeof parametros.nome === 'string' &&
+    parametros.nome.trim()
+      ? parametros.nome.trim()
+      : 'você';
 
-    const entradaCabecalho = useRef(
-        new Animated.Value(0),
-    ).current;
+  const entradaOrbita = useRef(
+    new Animated.Value(0),
+  ).current;
 
-    const entradaConteudo = useRef(
-        new Animated.Value(0),
-    ).current;
+  const entradaLetra = useRef(
+    new Animated.Value(0),
+  ).current;
 
-    useEffect(() => {
-        Animated.stagger(170, [
-            Animated.timing(entradaCabecalho, {
-                toValue: 1,
-                duration: 600,
-                easing: Easing.out(Easing.cubic),
-                useNativeDriver: true,
-            }),
+  const entradaStatus = useRef(
+    new Animated.Value(0),
+  ).current;
 
-            Animated.timing(entradaConteudo, {
-                toValue: 1,
-                duration: 700,
-                easing: Easing.out(Easing.cubic),
-                useNativeDriver: true,
-            }),
-        ]).start();
-    }, [entradaCabecalho, entradaConteudo]);
+  const entradaSaudacao = useRef(
+    new Animated.Value(0),
+  ).current;
 
-    function continuar() {
-        router.push({
-            pathname:
-                '/configuracao-inicial/perfil-saude',
+  const entradaTitulo = useRef(
+    new Animated.Value(0),
+  ).current;
 
-            params: {
-                nome: nomePreferido,
-            },
-        });
-    }
+  const entradaMensagem = useRef(
+    new Animated.Value(0),
+  ).current;
 
-    return (
-        <View style={styles.container}>
-            <StatusBar
-                translucent
-                backgroundColor="transparent"
-                barStyle="dark-content"
+  const entradaPerfil = useRef(
+    new Animated.Value(0),
+  ).current;
+
+  const entradaSaude = useRef(
+    new Animated.Value(0),
+  ).current;
+
+  const entradaRede = useRef(
+    new Animated.Value(0),
+  ).current;
+
+  const entradaFinal = useRef(
+    new Animated.Value(0),
+  ).current;
+
+  const movimentoOrbita = useRef(
+    new Animated.Value(0),
+  ).current;
+
+  const brilhoLuma = useRef(
+    new Animated.Value(0.2),
+  ).current;
+
+  const movimentoBolhaUm = useRef(
+    new Animated.Value(0),
+  ).current;
+
+  const movimentoBolhaDois = useRef(
+    new Animated.Value(0),
+  ).current;
+
+  const movimentoBolhaTres = useRef(
+    new Animated.Value(0),
+  ).current;
+
+  useEffect(() => {
+    const animacaoOrbita = Animated.loop(
+      Animated.timing(movimentoOrbita, {
+        toValue: 1,
+        duration: 13000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+    );
+
+    const animacaoBrilho = Animated.loop(
+      Animated.sequence([
+        Animated.timing(brilhoLuma, {
+          toValue: 0.42,
+          duration: 1700,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+
+        Animated.timing(brilhoLuma, {
+          toValue: 0.2,
+          duration: 1700,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+
+    const animacaoBolhaUm = criarAnimacaoBolha(
+      movimentoBolhaUm,
+      6600,
+    );
+
+    const animacaoBolhaDois = criarAnimacaoBolha(
+      movimentoBolhaDois,
+      8200,
+    );
+
+    const animacaoBolhaTres = criarAnimacaoBolha(
+      movimentoBolhaTres,
+      7300,
+    );
+
+    animacaoOrbita.start();
+    animacaoBrilho.start();
+    animacaoBolhaUm.start();
+    animacaoBolhaDois.start();
+    animacaoBolhaTres.start();
+
+    Animated.sequence([
+      Animated.spring(entradaOrbita, {
+        toValue: 1,
+        friction: 7,
+        tension: 54,
+        useNativeDriver: true,
+      }),
+
+      Animated.delay(140),
+
+      Animated.spring(entradaLetra, {
+        toValue: 1,
+        friction: 5,
+        tension: 72,
+        useNativeDriver: true,
+      }),
+
+      Animated.delay(160),
+
+      criarAnimacaoEntrada(
+        entradaStatus,
+        350,
+      ),
+
+      criarAnimacaoEntrada(
+        entradaSaudacao,
+        400,
+      ),
+
+      criarAnimacaoEntrada(
+        entradaTitulo,
+        430,
+      ),
+
+      criarAnimacaoEntrada(
+        entradaMensagem,
+        470,
+      ),
+
+      Animated.stagger(140, [
+        criarAnimacaoEntrada(
+          entradaPerfil,
+          360,
+        ),
+
+        criarAnimacaoEntrada(
+          entradaSaude,
+          360,
+        ),
+
+        criarAnimacaoEntrada(
+          entradaRede,
+          360,
+        ),
+      ]),
+
+      criarAnimacaoEntrada(
+        entradaFinal,
+        480,
+      ),
+    ]).start();
+
+    return () => {
+      animacaoOrbita.stop();
+      animacaoBrilho.stop();
+      animacaoBolhaUm.stop();
+      animacaoBolhaDois.stop();
+      animacaoBolhaTres.stop();
+    };
+  }, [
+    brilhoLuma,
+    entradaFinal,
+    entradaLetra,
+    entradaMensagem,
+    entradaOrbita,
+    entradaPerfil,
+    entradaRede,
+    entradaSaudacao,
+    entradaSaude,
+    entradaStatus,
+    entradaTitulo,
+    movimentoBolhaDois,
+    movimentoBolhaTres,
+    movimentoBolhaUm,
+    movimentoOrbita,
+  ]);
+
+  const rotacaoOrbita =
+    movimentoOrbita.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '360deg'],
+    });
+
+  const deslocamentoBolhaUm =
+    movimentoBolhaUm.interpolate({
+      inputRange: [0, 1],
+      outputRange: [70, -150],
+    });
+
+  const deslocamentoBolhaDois =
+    movimentoBolhaDois.interpolate({
+      inputRange: [0, 1],
+      outputRange: [100, -180],
+    });
+
+  const deslocamentoBolhaTres =
+    movimentoBolhaTres.interpolate({
+      inputRange: [0, 1],
+      outputRange: [55, -125],
+    });
+
+  function continuar() {
+    router.push({
+      pathname:
+        '/configuracao-inicial/perfil-saude',
+
+      params: {
+        nome: nomePreferido,
+      },
+    });
+  }
+
+  return (
+    <View style={styles.tela}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
+
+      <LinearGradient
+        colors={[
+          '#75C6F3',
+          '#4B9FE1',
+          '#2676C4',
+        ]}
+        start={{ x: 0.12, y: 0 }}
+        end={{ x: 0.9, y: 1 }}
+        style={styles.container}
+      >
+        <View
+          pointerEvents="none"
+          style={styles.fundoDecorativo}
+        >
+          <View style={styles.formaSuperior} />
+
+          <View style={styles.formaInferior} />
+
+          <Animated.View
+            style={[
+              styles.bolha,
+              styles.bolhaUm,
+              {
+                transform: [
+                  {
+                    translateY:
+                      deslocamentoBolhaUm,
+                  },
+                ],
+              },
+            ]}
+          />
+
+          <Animated.View
+            style={[
+              styles.bolha,
+              styles.bolhaDois,
+              {
+                transform: [
+                  {
+                    translateY:
+                      deslocamentoBolhaDois,
+                  },
+                ],
+              },
+            ]}
+          />
+
+          <Animated.View
+            style={[
+              styles.bolha,
+              styles.bolhaTres,
+              {
+                transform: [
+                  {
+                    translateY:
+                      deslocamentoBolhaTres,
+                  },
+                ],
+              },
+            ]}
+          />
+        </View>
+
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.conteudo}
+          showsVerticalScrollIndicator
+        >
+          <Pressable
+            onPress={() => router.back()}
+            style={({ pressed }) => [
+              styles.botaoVoltar,
+              pressed && styles.pressionado,
+            ]}
+          >
+            <Ionicons
+              name="arrow-back"
+              size={19}
+              color={Cores.fundo}
             />
 
-            <View
-                pointerEvents="none"
-                style={styles.fundoDecorativo}
+            <Text style={styles.textoVoltar}>
+              Voltar
+            </Text>
+          </Pressable>
+
+          <View style={styles.areaApresentacao}>
+            <Animated.View
+              style={[
+                styles.areaLuma,
+                {
+                  opacity: entradaOrbita,
+
+                  transform: [
+                    {
+                      scale:
+                        entradaOrbita,
+                    },
+                  ],
+                },
+              ]}
             >
-                <LinearGradient
+              <Animated.View
+                style={[
+                  styles.brilloExterno,
+                  {
+                    opacity: brilhoLuma,
+                  },
+                ]}
+              />
+
+              <View style={styles.orbitaExterna}>
+                <Animated.View
+                  style={[
+                    styles.orbitaAnimada,
+                    {
+                      transform: [
+                        {
+                          rotate:
+                            rotacaoOrbita,
+                        },
+                      ],
+                    },
+                  ]}
+                >
+                  <View
+                    style={styles.pontoOrbita}
+                  />
+
+                  <View
+                    style={
+                      styles.pontoOrbitaSecundario
+                    }
+                  />
+                </Animated.View>
+
+                <View style={styles.orbitaMedia}>
+                  <LinearGradient
                     colors={[
-                        'rgba(221, 238, 255, 0.95)',
-                        'rgba(248, 251, 255, 0)',
+                      'rgba(255,255,255,0.34)',
+                      'rgba(255,255,255,0.12)',
                     ]}
-                    style={styles.luzSuperior}
-                />
+                    style={styles.avatarLuma}
+                  >
+                    <Animated.Text
+                      style={[
+                        styles.letraLuma,
+                        {
+                          opacity:
+                            entradaLetra,
 
-                <LinearGradient
-                    colors={[
-                        'rgba(228, 242, 255, 0)',
-                        'rgba(228, 242, 255, 0.75)',
-                    ]}
-                    style={styles.luzInferior}
-                />
-
-                <View style={styles.bolhaUm} />
-                <View style={styles.bolhaDois} />
-
-                <View style={styles.gradePontos}>
-                    {Array.from({ length: 18 }).map(
-                        (_, indice) => (
-                            <View
-                                key={indice}
-                                style={styles.pontoGrade}
-                            />
-                        ),
-                    )}
+                          transform: [
+                            {
+                              scale:
+                                entradaLetra,
+                            },
+                          ],
+                        },
+                      ]}
+                    >
+                      L
+                    </Animated.Text>
+                  </LinearGradient>
                 </View>
+              </View>
+            </Animated.View>
+
+            <Animated.View
+              style={obterEstiloEntrada(
+                entradaStatus,
+              )}
+            >
+              <View style={styles.statusLuma}>
+                <View style={styles.pontoStatus} />
+
+                <Text style={styles.textoStatus}>
+                  IA do AlertaSOS
+                </Text>
+              </View>
+            </Animated.View>
+
+            <Animated.View
+              style={obterEstiloEntrada(
+                entradaSaudacao,
+              )}
+            >
+              <Text style={styles.saudacao}>
+                Olá, {nomePreferido}!
+              </Text>
+            </Animated.View>
+
+            <Animated.View
+              style={obterEstiloEntrada(
+                entradaTitulo,
+              )}
+            >
+              <Text style={styles.titulo}>
+                Eu sou a Luma
+              </Text>
+            </Animated.View>
+
+            <Animated.View
+              style={[
+                styles.balaoMensagem,
+                obterEstiloEntrada(
+                  entradaMensagem,
+                ),
+              ]}
+            >
+              <Text style={styles.textoMensagem}>
+                Vou conhecer você para ajudar o
+                AlertaSOS a agir melhor quando
+                precisar.
+              </Text>
+            </Animated.View>
+
+            <View style={styles.areaRecursos}>
+              <RecursoLuma
+                titulo="Seu perfil"
+                icone="person-outline"
+                animacao={entradaPerfil}
+              />
+
+              <RecursoLuma
+                titulo="Sua saúde"
+                icone="medical-outline"
+                animacao={entradaSaude}
+              />
+
+              <RecursoLuma
+                titulo="Rede de apoio"
+                icone="people-outline"
+                animacao={entradaRede}
+              />
             </View>
 
-            <ScrollView
-                style={styles.scroll}
-                contentContainerStyle={styles.conteudo}
-                showsVerticalScrollIndicator
-                keyboardShouldPersistTaps="handled"
+            <Animated.View
+              style={[
+                styles.areaFinal,
+                obterEstiloEntrada(
+                  entradaFinal,
+                ),
+              ]}
             >
-                <Pressable
-                    onPress={() => router.back()}
-                    style={({ pressed }) => [
-                        styles.botaoVoltar,
-                        pressed && styles.pressionado,
-                    ]}
+              <View style={styles.areaSeguranca}>
+                <Ionicons
+                  name="shield-checkmark-outline"
+                  size={17}
+                  color="rgba(255,255,255,0.92)"
+                />
+
+                <Text style={styles.textoSeguranca}>
+                  Seus dados permanecem protegidos.
+                </Text>
+              </View>
+
+              <Pressable
+                onPress={continuar}
+                style={({ pressed }) => [
+                  styles.botaoComecar,
+                  pressed &&
+                    styles.botaoComecarPressionado,
+                ]}
+              >
+                <View>
+                  <Text
+                    style={
+                      styles.textoBotaoComecar
+                    }
+                  >
+                    Vamos começar
+                  </Text>
+
+                  <Text
+                    style={
+                      styles.subtextoBotaoComecar
+                    }
+                  >
+                    Configurar meu perfil
+                  </Text>
+                </View>
+
+                <View
+                  style={styles.areaSetaBotao}
                 >
-                    <Ionicons
-                        name="arrow-back"
-                        size={20}
-                        color={Cores.primaria}
-                    />
+                  <Ionicons
+                    name="arrow-forward"
+                    size={20}
+                    color={Cores.fundo}
+                  />
+                </View>
+              </Pressable>
+            </Animated.View>
+          </View>
+        </ScrollView>
+      </LinearGradient>
+    </View>
+  );
+}
 
-                    <Text style={styles.textoVoltar}>
-                        Voltar
-                    </Text>
-                </Pressable>
+function RecursoLuma({
+  titulo,
+  icone,
+  animacao,
+}: RecursoLumaProps) {
+  return (
+    <Animated.View
+      style={[
+        styles.recurso,
+        {
+          opacity: animacao,
 
-                <Animated.View
-                    style={{
-                        opacity: entradaCabecalho,
+          transform: [
+            {
+              translateY:
+                animacao.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [18, 0],
+                }),
+            },
+          ],
+        },
+      ]}
+    >
+      <View style={styles.iconeRecurso}>
+        <Ionicons
+          name={icone}
+          size={19}
+          color={Cores.fundo}
+        />
+      </View>
 
-                        transform: [
-                            {
-                                translateY:
-                                    entradaCabecalho.interpolate({
-                                        inputRange: [0, 1],
-                                        outputRange: [-20, 0],
-                                    }),
-                            },
-                        ],
-                    }}
-                >
-                    <ProgressoCadastro
-                        etapaAtual={2}
-                        totalEtapas={5}
-                        titulo="Conheça a Luma"
-                        descricao="Sua assistente durante a configuração do AlertaSOS."
-                    />
-                </Animated.View>
+      <Text style={styles.textoRecurso}>
+        {titulo}
+      </Text>
+    </Animated.View>
+  );
+}
 
-                <Animated.View
-                    style={[
-                        styles.areaPrincipal,
+function criarAnimacaoEntrada(
+  valor: Animated.Value,
+  duracao: number,
+) {
+  return Animated.timing(valor, {
+    toValue: 1,
+    duration: duracao,
+    easing: Easing.out(Easing.cubic),
+    useNativeDriver: true,
+  });
+}
 
-                        {
-                            opacity: entradaConteudo,
+function criarAnimacaoBolha(
+  valor: Animated.Value,
+  duracao: number,
+) {
+  return Animated.loop(
+    Animated.sequence([
+      Animated.timing(valor, {
+        toValue: 1,
+        duration: duracao,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
 
-                            transform: [
-                                {
-                                    translateY:
-                                        entradaConteudo.interpolate({
-                                            inputRange: [0, 1],
-                                            outputRange: [35, 0],
-                                        }),
-                                },
-                            ],
-                        },
-                    ]}
-                >
-                    <View style={styles.areaAvatar}>
-                        <LinearGradient
-                            colors={[
-                                Cores.primaria,
-                                Cores.primariaEscura,
-                            ]}
-                            style={styles.avatar}
-                        >
-                            <Text style={styles.letraAvatar}>
-                                L
-                            </Text>
-                        </LinearGradient>
+      Animated.timing(valor, {
+        toValue: 0,
+        duration: 0,
+        useNativeDriver: true,
+      }),
+    ]),
+  );
+}
 
-                        <View style={styles.statusLuma}>
-                            <View style={styles.pontoStatus} />
+function obterEstiloEntrada(
+  valor: Animated.Value,
+) {
+  return {
+    opacity: valor,
 
-                            <Text style={styles.textoStatus}>
-                                IA do AlertaSOS
-                            </Text>
-                        </View>
-                    </View>
-
-                    <Text style={styles.saudacao}>
-                        Olá, {nomePreferido}.
-                    </Text>
-
-                    <Text style={styles.tituloPrincipal}>
-                        Eu sou a Luma
-                    </Text>
-
-                    <Text style={styles.descricaoPrincipal}>
-                        Estou aqui para conhecer melhor você e ajudar o
-                        AlertaSOS a cuidar da sua segurança.
-                    </Text>
-
-                    <MensagemLuma
-                        texto={`Vamos conversar um pouco, ${nomePreferido}, vou fazer algumas perguntas simples sobre sua saúde e sobre quem deve ser avisado quando você precisar.`}
-                    />
-
-                    <View style={styles.areaInformacoes}>
-                        <View style={styles.itemInformacao}>
-                            <View style={styles.numeroInformacao}>
-                                <Text style={styles.textoNumero}>
-                                    1
-                                </Text>
-                            </View>
-
-                            <View style={styles.conteudoInformacao}>
-                                <Text style={styles.tituloInformacao}>
-                                    Responda no seu ritmo
-                                </Text>
-
-                                <Text style={styles.textoInformacao}>
-                                    Preencha apenas as informações que
-                                    souber.
-                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={styles.itemInformacao}>
-                            <View style={styles.numeroInformacao}>
-                                <Text style={styles.textoNumero}>
-                                    2
-                                </Text>
-                            </View>
-
-                            <View style={styles.conteudoInformacao}>
-                                <Text style={styles.tituloInformacao}>
-                                    Revise quando quiser
-                                </Text>
-
-                                <Text style={styles.textoInformacao}>
-                                    Tudo poderá ser alterado depois.
-                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={styles.itemInformacao}>
-                            <View style={styles.numeroInformacao}>
-                                <Text style={styles.textoNumero}>
-                                    3
-                                </Text>
-                            </View>
-
-                            <View style={styles.conteudoInformacao}>
-                                <Text style={styles.tituloInformacao}>
-                                    Informações protegidas
-                                </Text>
-
-                                <Text style={styles.textoInformacao}>
-                                    Seus dados serão utilizados para
-                                    personalizar sua segurança.
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-
-                    <Botao
-                        titulo="Vamos começar"
-                        onPress={continuar}
-                        iconeDireita={
-                            <Ionicons
-                                name="arrow-forward"
-                                size={18}
-                                color={Cores.fundo}
-                            />
-                        }
-                    />
-
-                    <View style={styles.rodape}>
-                        <Ionicons
-                            name="shield-checkmark-outline"
-                            size={15}
-                            color={Cores.primaria}
-                        />
-
-                    </View>
-                </Animated.View>
-            </ScrollView>
-        </View>
-    );
+    transform: [
+      {
+        translateY: valor.interpolate({
+          inputRange: [0, 1],
+          outputRange: [20, 0],
+        }),
+      },
+    ],
+  };
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Cores.fundoSecundario,
-    },
+  tela: {
+    flex: 1,
+  },
 
-    scroll: {
-        flex: 1,
-    },
+  container: {
+    flex: 1,
+    overflow: 'hidden',
+  },
 
-    conteudo: {
-        flexGrow: 1,
+  scroll: {
+    flex: 1,
+  },
 
-        width: '100%',
-        maxWidth: 520,
+  conteudo: {
+    flexGrow: 1,
 
-        alignSelf: 'center',
+    width: '100%',
+    maxWidth: 520,
 
-        paddingHorizontal:
-            Espacamentos.margemHorizontal,
+    alignSelf: 'center',
 
-        paddingTop:
-            Platform.OS === 'android' ? 52 : 40,
+    paddingHorizontal:
+      Espacamentos.margemHorizontal,
 
-        paddingBottom: 120,
-    },
+    paddingTop:
+      Platform.OS === 'android' ? 53 : 42,
 
-    fundoDecorativo: {
-        ...StyleSheet.absoluteFillObject,
-        overflow: 'hidden',
-    },
+    paddingBottom: 65,
+  },
 
-    luzSuperior: {
-        position: 'absolute',
+  fundoDecorativo: {
+    ...StyleSheet.absoluteFillObject,
+    overflow: 'hidden',
+  },
 
-        width: 420,
-        height: 420,
+  formaSuperior: {
+    position: 'absolute',
 
-        top: -250,
-        right: -190,
+    width: 340,
+    height: 340,
 
-        borderRadius: 210,
-    },
+    top: -190,
+    right: -120,
 
-    luzInferior: {
-        position: 'absolute',
+    borderRadius: Bordas.circular,
 
-        width: 380,
-        height: 380,
+    backgroundColor:
+      'rgba(255,255,255,0.08)',
+  },
 
-        bottom: -250,
-        left: -220,
+  formaInferior: {
+    position: 'absolute',
 
-        borderRadius: 190,
-    },
+    width: 390,
+    height: 390,
 
-    bolhaUm: {
-        position: 'absolute',
+    bottom: -270,
+    left: -210,
 
-        width: 100,
-        height: 100,
+    borderRadius: Bordas.circular,
 
-        top: 170,
-        right: -50,
+    backgroundColor:
+      'rgba(255,255,255,0.07)',
+  },
 
-        borderRadius: Bordas.circular,
+  bolha: {
+    position: 'absolute',
 
-        backgroundColor:
-            'rgba(72, 145, 246, 0.08)',
-    },
+    borderRadius: Bordas.circular,
+    borderWidth: 1,
 
-    bolhaDois: {
-        position: 'absolute',
+    borderColor:
+      'rgba(255,255,255,0.20)',
 
-        width: 55,
-        height: 55,
+    backgroundColor:
+      'rgba(255,255,255,0.07)',
+  },
 
-        bottom: 170,
-        left: -22,
+  bolhaUm: {
+    width: 24,
+    height: 24,
 
-        borderRadius: Bordas.circular,
+    top: '25%',
+    left: '12%',
+  },
 
-        backgroundColor:
-            'rgba(72, 145, 246, 0.09)',
-    },
+  bolhaDois: {
+    width: 47,
+    height: 47,
 
-    gradePontos: {
-        position: 'absolute',
+    top: '73%',
+    right: '9%',
+  },
 
-        top: 230,
-        right: 20,
+  bolhaTres: {
+    width: 14,
+    height: 14,
 
-        width: 70,
+    top: '50%',
+    right: '18%',
+  },
 
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-    },
+  botaoVoltar: {
+    alignSelf: 'flex-start',
 
-    pontoGrade: {
-        width: 3,
-        height: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
 
-        margin: 5,
+    paddingVertical: 8,
+    paddingRight: 12,
+  },
 
-        borderRadius: Bordas.circular,
+  textoVoltar: {
+    marginLeft: 6,
 
-        backgroundColor:
-            'rgba(46, 125, 245, 0.16)',
-    },
+    fontSize: Tipografia.textoPequeno,
+    fontWeight: Tipografia.pesoExtraBold,
 
-    botaoVoltar: {
-        alignSelf: 'flex-start',
+    color: Cores.fundo,
+  },
 
-        flexDirection: 'row',
-        alignItems: 'center',
+  areaApresentacao: {
+    flex: 1,
 
-        marginBottom: Espacamentos.medio,
+    alignItems: 'center',
+    justifyContent: 'center',
 
-        paddingVertical: 7,
-        paddingRight: 12,
-    },
+    paddingTop: 10,
+  },
 
-    textoVoltar: {
-        marginLeft: 6,
+  areaLuma: {
+    width: 180,
+    height: 180,
 
-        fontSize: Tipografia.textoPequeno,
-        fontWeight: Tipografia.pesoExtraBold,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 
-        color: Cores.primaria,
-    },
+  brilloExterno: {
+    position: 'absolute',
 
-    areaPrincipal: {
-        width: '100%',
+    width: 176,
+    height: 176,
 
-        padding: Espacamentos.paddingGrande,
+    borderRadius: Bordas.circular,
 
-        borderRadius: Bordas.extraGrande,
-        borderWidth: 1,
-        borderColor: Cores.bordaMuitoSuave,
+    backgroundColor:
+      'rgba(255,255,255,0.22)',
+  },
 
-        backgroundColor: Cores.fundo,
+  orbitaExterna: {
+    width: 144,
+    height: 144,
 
-        ...Sombras.media,
-    },
+    alignItems: 'center',
+    justifyContent: 'center',
 
-    areaAvatar: {
-        alignItems: 'center',
+    borderRadius: Bordas.circular,
 
-        marginBottom: Espacamentos.grande,
-    },
+    borderWidth: 1,
+    borderColor:
+      'rgba(255,255,255,0.36)',
 
-    avatar: {
-        width: 92,
-        height: 92,
+    backgroundColor:
+      'rgba(255,255,255,0.08)',
+  },
 
-        alignItems: 'center',
-        justifyContent: 'center',
+  orbitaAnimada: {
+    position: 'absolute',
 
-        borderRadius: Bordas.circular,
+    width: 130,
+    height: 130,
 
-        ...Sombras.media,
-    },
+    borderRadius: Bordas.circular,
+  },
 
-    letraAvatar: {
-        fontSize: 39,
-        fontWeight: Tipografia.pesoBlack,
+  pontoOrbita: {
+    position: 'absolute',
 
-        color: Cores.fundo,
-    },
+    width: 8,
+    height: 8,
 
-    statusLuma: {
-        flexDirection: 'row',
-        alignItems: 'center',
+    top: 3,
+    left: 61,
 
-        marginTop: 12,
+    borderRadius: Bordas.circular,
 
-        paddingHorizontal: 11,
-        paddingVertical: 6,
+    backgroundColor: Cores.fundo,
+  },
 
-        borderRadius: Bordas.circular,
+  pontoOrbitaSecundario: {
+    position: 'absolute',
 
-        backgroundColor: Cores.fundoAzuladoClaro,
-    },
+    width: 5,
+    height: 5,
 
-    pontoStatus: {
-        width: 7,
-        height: 7,
+    bottom: 12,
+    right: 14,
 
-        marginRight: 6,
+    borderRadius: Bordas.circular,
 
-        borderRadius: Bordas.circular,
+    backgroundColor:
+      'rgba(255,255,255,0.70)',
+  },
 
-        backgroundColor: Cores.sucesso,
-    },
+  orbitaMedia: {
+    width: 111,
+    height: 111,
 
-    textoStatus: {
-        fontSize: 11.5,
-        fontWeight: Tipografia.pesoSemiBold,
+    alignItems: 'center',
+    justifyContent: 'center',
 
-        color: Cores.textoSecundario,
-    },
+    borderRadius: Bordas.circular,
 
-    saudacao: {
-        fontSize: Tipografia.textoPequeno,
-        fontWeight: Tipografia.pesoExtraBold,
+    borderWidth: 1,
+    borderColor:
+      'rgba(255,255,255,0.30)',
+  },
 
-        textAlign: 'center',
+  avatarLuma: {
+    width: 90,
+    height: 90,
 
-        color: Cores.primaria,
-    },
+    alignItems: 'center',
+    justifyContent: 'center',
 
-    tituloPrincipal: {
-        marginTop: 6,
+    borderRadius: Bordas.circular,
+  },
 
-        fontSize: 31,
-        lineHeight: 37,
+  letraLuma: {
+    fontSize: 45,
+    fontWeight: Tipografia.pesoBlack,
 
-        fontWeight: Tipografia.pesoBlack,
+    color: Cores.fundo,
+  },
 
-        textAlign: 'center',
+  statusLuma: {
+    flexDirection: 'row',
+    alignItems: 'center',
 
-        color: Cores.texto,
+    marginTop: -4,
+    marginBottom: 10,
 
-        letterSpacing: -1,
-    },
+    paddingHorizontal: 11,
+    paddingVertical: 6,
 
-    descricaoPrincipal: {
-        maxWidth: 390,
+    borderRadius: Bordas.circular,
 
-        alignSelf: 'center',
+    backgroundColor:
+      'rgba(10,74,139,0.20)',
+  },
 
-        marginTop: 9,
-        marginBottom: Espacamentos.grande,
+  pontoStatus: {
+    width: 7,
+    height: 7,
 
-        fontSize: Tipografia.textoPequeno,
-        lineHeight: 21,
+    marginRight: 6,
 
-        textAlign: 'center',
+    borderRadius: Bordas.circular,
 
-        color: Cores.textoSecundario,
-    },
+    backgroundColor: '#77F1B7',
+  },
 
-    areaInformacoes: {
-        marginVertical: Espacamentos.grande,
+  textoStatus: {
+    fontSize: 11.5,
+    fontWeight: Tipografia.pesoExtraBold,
 
-        gap: Espacamentos.paddingPequeno,
-    },
+    color: Cores.fundo,
+  },
 
-    itemInformacao: {
-        flexDirection: 'row',
-        alignItems: 'center',
+  saudacao: {
+    fontSize: Tipografia.textoGrande,
+    fontWeight: Tipografia.pesoExtraBold,
 
-        padding: Espacamentos.paddingPequeno,
+    textAlign: 'center',
 
-        borderRadius: Bordas.grande,
+    color:
+      'rgba(255,255,255,0.90)',
+  },
 
-        backgroundColor: Cores.fundoSecundario,
-    },
+  titulo: {
+    marginTop: 5,
 
-    numeroInformacao: {
-        width: 35,
-        height: 35,
+    fontSize: 36,
+    lineHeight: 42,
 
-        alignItems: 'center',
-        justifyContent: 'center',
+    fontWeight: Tipografia.pesoBlack,
 
-        borderRadius: Bordas.circular,
+    textAlign: 'center',
 
-        backgroundColor: Cores.primariaClara,
-    },
+    color: Cores.fundo,
 
-    textoNumero: {
-        fontSize: Tipografia.textoPequeno,
-        fontWeight: Tipografia.pesoBlack,
+    letterSpacing: -1,
+  },
 
-        color: Cores.primaria,
-    },
+  balaoMensagem: {
+    maxWidth: 410,
 
-    conteudoInformacao: {
-        flex: 1,
+    marginTop: 15,
 
-        marginLeft: Espacamentos.paddingPequeno,
-    },
+    paddingHorizontal:
+      Espacamentos.paddingMedio,
 
-    tituloInformacao: {
-        fontSize: 13,
-        fontWeight: Tipografia.pesoExtraBold,
+    paddingVertical:
+      Espacamentos.paddingPequeno,
 
-        color: Cores.primariaEscura,
-    },
+    borderRadius: Bordas.extraGrande,
+    borderWidth: 1,
 
-    textoInformacao: {
-        marginTop: 2,
+    borderColor:
+      'rgba(255,255,255,0.28)',
 
-        fontSize: Tipografia.legenda,
-        lineHeight: 17,
+    backgroundColor:
+      'rgba(13,70,128,0.16)',
+  },
 
-        color: Cores.textoSuave,
-    },
+  textoMensagem: {
+    fontSize: Tipografia.textoPequeno,
+    lineHeight: 21,
 
-    rodape: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+    textAlign: 'center',
 
-        marginTop: Espacamentos.medio,
-    },
+    color:
+      'rgba(255,255,255,0.92)',
+  },
 
-    textoRodape: {
-        marginLeft: 6,
+  areaRecursos: {
+    width: '100%',
 
-        fontSize: 11.5,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
 
-        color: Cores.textoSuave,
-    },
+    gap: 10,
 
-    pressionado: {
-        opacity: 0.6,
-    },
+    marginTop: 25,
+  },
+
+  recurso: {
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    minHeight: 44,
+
+    paddingLeft: 7,
+    paddingRight: 13,
+    paddingVertical: 7,
+
+    borderRadius: Bordas.circular,
+    borderWidth: 1,
+
+    borderColor:
+      'rgba(255,255,255,0.25)',
+
+    backgroundColor:
+      'rgba(255,255,255,0.12)',
+  },
+
+  iconeRecurso: {
+    width: 30,
+    height: 30,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    marginRight: 7,
+
+    borderRadius: Bordas.circular,
+
+    backgroundColor:
+      'rgba(255,255,255,0.15)',
+  },
+
+  textoRecurso: {
+    fontSize: 12,
+    fontWeight: Tipografia.pesoExtraBold,
+
+    color: Cores.fundo,
+  },
+
+  areaFinal: {
+    width: '100%',
+
+    marginTop: 27,
+  },
+
+  areaSeguranca: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    marginBottom: 15,
+  },
+
+  textoSeguranca: {
+    marginLeft: 7,
+
+    fontSize: 11.5,
+
+    color:
+      'rgba(255,255,255,0.84)',
+  },
+
+  botaoComecar: {
+    width: '100%',
+    minHeight: 68,
+
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+
+    paddingLeft: 22,
+    paddingRight: 11,
+
+    borderRadius: Bordas.extraGrande,
+
+    backgroundColor: Cores.fundo,
+  },
+
+  botaoComecarPressionado: {
+    opacity: 0.84,
+    transform: [{ scale: 0.985 }],
+  },
+
+  textoBotaoComecar: {
+    fontSize: Tipografia.textoGrande,
+    fontWeight: Tipografia.pesoBlack,
+
+    color: Cores.primariaEscura,
+  },
+
+  subtextoBotaoComecar: {
+    marginTop: 2,
+
+    fontSize: 11.5,
+
+    color: Cores.textoSuave,
+  },
+
+  areaSetaBotao: {
+    width: 46,
+    height: 46,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    borderRadius: Bordas.circular,
+
+    backgroundColor: Cores.primaria,
+  },
+
+  pressionado: {
+    opacity: 0.65,
+  },
 });

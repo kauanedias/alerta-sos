@@ -4,12 +4,13 @@ import {
   router,
   useLocalSearchParams,
 } from 'expo-router';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import {
   Animated,
   Easing,
   Platform,
+  Pressable,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -17,11 +18,6 @@ import {
   Vibration,
   View,
 } from 'react-native';
-
-import {
-  Botao,
-  MensagemLuma,
-} from '../../src/componentes';
 
 import {
   Bordas,
@@ -33,7 +29,6 @@ import {
 
 type ItemConcluidoProps = {
   titulo: string;
-  descricao: string;
   icone:
     | 'person-outline'
     | 'medical-outline'
@@ -53,7 +48,8 @@ export default function CadastroConcluidoScreen() {
       ? parametros.nome.trim()
       : 'você';
 
-  // Círculo e confirmação
+  const [entrando, setEntrando] = useState(false);
+
   const escalaCirculo = useRef(
     new Animated.Value(0),
   ).current;
@@ -70,11 +66,6 @@ export default function CadastroConcluidoScreen() {
     new Animated.Value(0.4),
   ).current;
 
-  // Textos principais
-  const entradaSaudacao = useRef(
-    new Animated.Value(0),
-  ).current;
-
   const entradaTitulo = useRef(
     new Animated.Value(0),
   ).current;
@@ -83,12 +74,10 @@ export default function CadastroConcluidoScreen() {
     new Animated.Value(0),
   ).current;
 
-  // Luma
   const entradaLuma = useRef(
     new Animated.Value(0),
   ).current;
 
-  // Cards
   const entradaPerfil = useRef(
     new Animated.Value(0),
   ).current;
@@ -105,12 +94,26 @@ export default function CadastroConcluidoScreen() {
     new Animated.Value(0),
   ).current;
 
-  // Parte final
-  const entradaFinal = useRef(
+  const entradaSeguranca = useRef(
     new Animated.Value(0),
   ).current;
 
-  // Bolhas do fundo
+  const entradaBotao = useRef(
+    new Animated.Value(0),
+  ).current;
+
+  const brilhoBotao = useRef(
+    new Animated.Value(0.16),
+  ).current;
+
+  const entradaDespedida = useRef(
+    new Animated.Value(0),
+  ).current;
+
+  const opacidadeTela = useRef(
+    new Animated.Value(1),
+  ).current;
+
   const movimentoBolhaUm = useRef(
     new Animated.Value(0),
   ).current;
@@ -123,38 +126,45 @@ export default function CadastroConcluidoScreen() {
     new Animated.Value(0),
   ).current;
 
-  const movimentoBolhaQuatro = useRef(
-    new Animated.Value(0),
-  ).current;
-
   useEffect(() => {
     const animacaoBolhaUm = criarAnimacaoBolha(
       movimentoBolhaUm,
-      6200,
+      6400,
     );
 
     const animacaoBolhaDois = criarAnimacaoBolha(
       movimentoBolhaDois,
-      7600,
+      7800,
     );
 
     const animacaoBolhaTres = criarAnimacaoBolha(
       movimentoBolhaTres,
-      6800,
+      7000,
     );
 
-    const animacaoBolhaQuatro = criarAnimacaoBolha(
-      movimentoBolhaQuatro,
-      8200,
+    const animacaoBrilhoBotao = Animated.loop(
+      Animated.sequence([
+        Animated.timing(brilhoBotao, {
+          toValue: 0.34,
+          duration: 1400,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+
+        Animated.timing(brilhoBotao, {
+          toValue: 0.16,
+          duration: 1400,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]),
     );
 
     animacaoBolhaUm.start();
     animacaoBolhaDois.start();
     animacaoBolhaTres.start();
-    animacaoBolhaQuatro.start();
 
     Animated.sequence([
-      // 1. Círculo aparece e cresce
       Animated.spring(escalaCirculo, {
         toValue: 1,
         friction: 6,
@@ -162,13 +172,12 @@ export default function CadastroConcluidoScreen() {
         useNativeDriver: true,
       }),
 
-      Animated.delay(180),
+      Animated.delay(170),
 
-      // 2. Check aparece
       Animated.parallel([
         Animated.timing(opacidadeCheck, {
           toValue: 1,
-          duration: 300,
+          duration: 280,
           easing: Easing.out(Easing.ease),
           useNativeDriver: true,
         }),
@@ -176,56 +185,78 @@ export default function CadastroConcluidoScreen() {
         Animated.spring(escalaCheck, {
           toValue: 1,
           friction: 5,
-          tension: 75,
+          tension: 72,
           useNativeDriver: true,
         }),
       ]),
 
-      Animated.delay(300),
+      Animated.delay(280),
 
-      // 3. Círculo diminui e sobe
       Animated.parallel([
         Animated.timing(escalaCirculo, {
           toValue: 0.72,
-          duration: 500,
+          duration: 480,
           easing: Easing.inOut(Easing.cubic),
           useNativeDriver: true,
         }),
 
         Animated.timing(deslocamentoCirculo, {
           toValue: -18,
-          duration: 500,
+          duration: 480,
           easing: Easing.inOut(Easing.cubic),
           useNativeDriver: true,
         }),
       ]),
 
-      // 4. Tudo certo
-      criarAnimacaoEntrada(entradaSaudacao, 430),
+      criarAnimacaoEntrada(
+        entradaTitulo,
+        420,
+      ),
 
-      // 5. Cadastro concluído
-      criarAnimacaoEntrada(entradaTitulo, 430),
+      criarAnimacaoEntrada(
+        entradaDescricao,
+        420,
+      ),
 
-      // 6. Descrição
-      criarAnimacaoEntrada(entradaDescricao, 430),
+      criarAnimacaoEntrada(
+        entradaLuma,
+        480,
+      ),
 
-      // 7. Luma
-      criarAnimacaoEntrada(entradaLuma, 480),
+      Animated.stagger(150, [
+        criarAnimacaoEntradaLateral(
+          entradaPerfil,
+          390,
+        ),
 
-      // 8. Cards, um por vez
-      Animated.stagger(160, [
-        criarAnimacaoEntrada(entradaPerfil, 430),
-        criarAnimacaoEntrada(entradaSaude, 430),
-        criarAnimacaoEntrada(entradaRede, 430),
-        criarAnimacaoEntrada(
+        criarAnimacaoEntradaLateral(
+          entradaSaude,
+          390,
+        ),
+
+        criarAnimacaoEntradaLateral(
+          entradaRede,
+          390,
+        ),
+
+        criarAnimacaoEntradaLateral(
           entradaPermissoes,
-          430,
+          390,
         ),
       ]),
 
-      // 9. Aviso e botão
-      criarAnimacaoEntrada(entradaFinal, 500),
-    ]).start();
+      criarAnimacaoEntrada(
+        entradaSeguranca,
+        430,
+      ),
+
+      criarAnimacaoEntrada(
+        entradaBotao,
+        480,
+      ),
+    ]).start(() => {
+      animacaoBrilhoBotao.start();
+    });
 
     const tempoVibracao = setTimeout(() => {
       if (Platform.OS !== 'web') {
@@ -239,66 +270,93 @@ export default function CadastroConcluidoScreen() {
       animacaoBolhaUm.stop();
       animacaoBolhaDois.stop();
       animacaoBolhaTres.stop();
-      animacaoBolhaQuatro.stop();
+      animacaoBrilhoBotao.stop();
     };
   }, [
+    brilhoBotao,
     deslocamentoCirculo,
+    entradaBotao,
     entradaDescricao,
-    entradaFinal,
     entradaLuma,
     entradaPerfil,
     entradaPermissoes,
     entradaRede,
-    entradaSaudacao,
     entradaSaude,
+    entradaSeguranca,
     entradaTitulo,
     escalaCheck,
     escalaCirculo,
     movimentoBolhaDois,
-    movimentoBolhaQuatro,
     movimentoBolhaTres,
     movimentoBolhaUm,
     opacidadeCheck,
   ]);
 
-  const deslocamentoUm =
+  const deslocamentoBolhaUm =
     movimentoBolhaUm.interpolate({
       inputRange: [0, 1],
       outputRange: [70, -150],
     });
 
-  const deslocamentoDois =
+  const deslocamentoBolhaDois =
     movimentoBolhaDois.interpolate({
       inputRange: [0, 1],
-      outputRange: [120, -190],
+      outputRange: [110, -185],
     });
 
-  const deslocamentoTres =
+  const deslocamentoBolhaTres =
     movimentoBolhaTres.interpolate({
       inputRange: [0, 1],
-      outputRange: [60, -130],
-    });
-
-  const deslocamentoQuatro =
-    movimentoBolhaQuatro.interpolate({
-      inputRange: [0, 1],
-      outputRange: [100, -170],
+      outputRange: [55, -125],
     });
 
   function entrarNoAplicativo() {
-  console.log('Cadastro concluído');
+    if (entrando) {
+      return;
+    }
 
-  router.replace({
-    pathname: '/home',
+    setEntrando(true);
 
-    params: {
-      nome: nomePreferido,
-    },
-  });
-}
+    if (Platform.OS !== 'web') {
+      Vibration.vibrate(35);
+    }
+
+    Animated.sequence([
+      Animated.timing(entradaDespedida, {
+        toValue: 1,
+        duration: 350,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+
+      Animated.delay(900),
+
+      Animated.timing(opacidadeTela, {
+        toValue: 0,
+        duration: 500,
+        easing: Easing.inOut(Easing.ease),
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      router.replace({
+        pathname: '/home',
+
+        params: {
+          nome: nomePreferido,
+        },
+      });
+    });
+  }
 
   return (
-    <View style={styles.tela}>
+    <Animated.View
+      style={[
+        styles.tela,
+        {
+          opacity: opacidadeTela,
+        },
+      ]}
+    >
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -307,11 +365,11 @@ export default function CadastroConcluidoScreen() {
 
       <LinearGradient
         colors={[
-          '#78C6F4',
-          '#4FA3E3',
-          '#2E7FCB',
+          '#79C8F4',
+          '#4B9FE1',
+          '#2677C5',
         ]}
-        start={{ x: 0.15, y: 0 }}
+        start={{ x: 0.12, y: 0 }}
         end={{ x: 0.9, y: 1 }}
         style={styles.container}
       >
@@ -319,6 +377,9 @@ export default function CadastroConcluidoScreen() {
           pointerEvents="none"
           style={styles.fundoDecorativo}
         >
+          <View style={styles.formaSuperior} />
+          <View style={styles.formaInferior} />
+
           <Animated.View
             style={[
               styles.bolha,
@@ -327,7 +388,7 @@ export default function CadastroConcluidoScreen() {
                 transform: [
                   {
                     translateY:
-                      deslocamentoUm,
+                      deslocamentoBolhaUm,
                   },
                 ],
               },
@@ -342,7 +403,7 @@ export default function CadastroConcluidoScreen() {
                 transform: [
                   {
                     translateY:
-                      deslocamentoDois,
+                      deslocamentoBolhaDois,
                   },
                 ],
               },
@@ -357,30 +418,12 @@ export default function CadastroConcluidoScreen() {
                 transform: [
                   {
                     translateY:
-                      deslocamentoTres,
+                      deslocamentoBolhaTres,
                   },
                 ],
               },
             ]}
           />
-
-          <Animated.View
-            style={[
-              styles.bolha,
-              styles.bolhaQuatro,
-              {
-                transform: [
-                  {
-                    translateY:
-                      deslocamentoQuatro,
-                  },
-                ],
-              },
-            ]}
-          />
-
-          <View style={styles.formaSuperior} />
-          <View style={styles.formaInferior} />
         </View>
 
         <ScrollView
@@ -395,8 +438,7 @@ export default function CadastroConcluidoScreen() {
                 {
                   transform: [
                     {
-                      scale:
-                        escalaCirculo,
+                      scale: escalaCirculo,
                     },
                     {
                       translateY:
@@ -413,8 +455,7 @@ export default function CadastroConcluidoScreen() {
                 {
                   transform: [
                     {
-                      scale:
-                        escalaCirculo,
+                      scale: escalaCirculo,
                     },
                     {
                       translateY:
@@ -427,20 +468,18 @@ export default function CadastroConcluidoScreen() {
               <View style={styles.circuloInterno}>
                 <Animated.View
                   style={{
-                    opacity:
-                      opacidadeCheck,
+                    opacity: opacidadeCheck,
 
                     transform: [
                       {
-                        scale:
-                          escalaCheck,
+                        scale: escalaCheck,
                       },
                     ],
                   }}
                 >
                   <Ionicons
                     name="checkmark"
-                    size={58}
+                    size={55}
                     color={Cores.fundo}
                   />
                 </Animated.View>
@@ -450,19 +489,13 @@ export default function CadastroConcluidoScreen() {
 
           <Animated.View
             style={obterEstiloEntrada(
-              entradaSaudacao,
+              entradaTitulo,
             )}
           >
             <Text style={styles.saudacao}>
               Tudo certo, {nomePreferido}!
             </Text>
-          </Animated.View>
 
-          <Animated.View
-            style={obterEstiloEntrada(
-              entradaTitulo,
-            )}
-          >
             <Text style={styles.titulo}>
               Cadastro concluído
             </Text>
@@ -474,47 +507,73 @@ export default function CadastroConcluidoScreen() {
             )}
           >
             <Text style={styles.descricao}>
-              Seu perfil inicial foi configurado e o
-              AlertaSOS está pronto para continuar.
+              Seu AlertaSOS está pronto.
             </Text>
           </Animated.View>
 
           <Animated.View
             style={[
-              styles.cardConteudo,
+              styles.areaLuma,
               obterEstiloEntrada(entradaLuma),
             ]}
           >
-            <MensagemLuma
-              texto={`Muito prazer, ${nomePreferido}! Agora eu conheço seu perfil, sua saúde e sua rede de apoio. Sempre que precisar, estarei aqui para ajudar.`}
-            />
+            <View style={styles.avatarLuma}>
+              <Text style={styles.letraLuma}>
+                L
+              </Text>
+            </View>
+
+            <Text style={styles.nomeLuma}>
+              Luma
+            </Text>
+
+            <Text style={styles.falaLuma}>
+              Perfeito, {nomePreferido}.
+            </Text>
+
+            <Text style={styles.textoLuma}>
+              Agora seu perfil está preparado.
+              Sempre que precisar, estarei ao seu lado.
+            </Text>
           </Animated.View>
+
+          <View style={styles.divisor}>
+            <View style={styles.linhaDivisor} />
+
+            <Text style={styles.textoDivisor}>
+              CONFIGURAÇÃO FINALIZADA
+            </Text>
+
+            <View style={styles.linhaDivisor} />
+          </View>
 
           <View style={styles.areaEtapas}>
             <ItemConcluido
               titulo="Perfil configurado"
-              descricao="Suas informações pessoais foram adicionadas."
               icone="person-outline"
               animacao={entradaPerfil}
             />
 
+            <View style={styles.linhaEtapas} />
+
             <ItemConcluido
               titulo="Saúde cadastrada"
-              descricao="Suas informações importantes foram organizadas."
               icone="medical-outline"
               animacao={entradaSaude}
             />
 
+            <View style={styles.linhaEtapas} />
+
             <ItemConcluido
-              titulo="Rede de apoio criada"
-              descricao="Seus contatos de confiança foram cadastrados."
+              titulo="Rede de apoio pronta"
               icone="people-outline"
               animacao={entradaRede}
             />
 
+            <View style={styles.linhaEtapas} />
+
             <ItemConcluido
               titulo="Permissões preparadas"
-              descricao="O aparelho solicitará os acessos necessários."
               icone="shield-checkmark-outline"
               animacao={entradaPermissoes}
             />
@@ -522,58 +581,129 @@ export default function CadastroConcluidoScreen() {
 
           <Animated.View
             style={[
-              styles.areaFinal,
-              obterEstiloEntrada(entradaFinal),
+              styles.areaSeguranca,
+              obterEstiloEntrada(
+                entradaSeguranca,
+              ),
             ]}
           >
-            <View style={styles.aviso}>
+            <View style={styles.iconeSeguranca}>
               <Ionicons
-                name="information-circle-outline"
-                size={19}
-                color={Cores.primaria}
+                name="shield-checkmark"
+                size={22}
+                color={Cores.fundo}
               />
-
-              <Text style={styles.textoAviso}>
-                Você poderá alterar essas informações
-                quando quiser nas configurações do
-                aplicativo.
-              </Text>
             </View>
 
-            <Botao
-              titulo="Entrar no AlertaSOS"
-              onPress={entrarNoAplicativo}
-              iconeDireita={
-                <Ionicons
-                  name="arrow-forward"
-                  size={18}
-                  color={Cores.fundo}
-                />
-              }
-            />
+            <View style={styles.conteudoSeguranca}>
+              <Text style={styles.tituloSeguranca}>
+                Seus dados estão protegidos
+              </Text>
 
-            <View style={styles.rodape}>
-              <Ionicons
-                name="shield-checkmark-outline"
-                size={14}
-                color="rgba(255, 255, 255, 0.88)"
-              />
-
-              <Text style={styles.textoRodape}>
-                Sua proteção começa com uma rede de
-                apoio preparada.
+              <Text style={styles.textoSeguranca}>
+                Você poderá alterar suas informações
+                quando quiser.
               </Text>
             </View>
           </Animated.View>
+
+          <Animated.View
+            style={[
+              styles.areaBotao,
+              obterEstiloEntrada(entradaBotao),
+            ]}
+          >
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                styles.brilhoBotao,
+                {
+                  opacity: brilhoBotao,
+                },
+              ]}
+            />
+
+            <Pressable
+              onPress={entrarNoAplicativo}
+              disabled={entrando}
+              style={({ pressed }) => [
+                styles.botaoEntrar,
+                pressed &&
+                  styles.botaoEntrarPressionado,
+                entrando &&
+                  styles.botaoEntrarDesativado,
+              ]}
+            >
+              <View>
+                <Text style={styles.textoBotao}>
+                  Entrar no AlertaSOS
+                </Text>
+
+                <Text style={styles.subtextoBotao}>
+                  Acessar minha proteção
+                </Text>
+              </View>
+
+              <View style={styles.areaSeta}>
+                <Ionicons
+                  name="arrow-forward"
+                  size={21}
+                  color={Cores.fundo}
+                />
+              </View>
+            </Pressable>
+
+            <Text style={styles.rodape}>
+              O AlertaSOS está pronto para cuidar de
+              você.
+            </Text>
+          </Animated.View>
         </ScrollView>
+
+        {entrando ? (
+          <Animated.View
+            pointerEvents="none"
+            style={[
+              styles.mensagemDespedida,
+              {
+                opacity: entradaDespedida,
+
+                transform: [
+                  {
+                    translateY:
+                      entradaDespedida.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [20, 0],
+                      }),
+                  },
+                ],
+              },
+            ]}
+          >
+            <View style={styles.avatarDespedida}>
+              <Text style={styles.letraDespedida}>
+                L
+              </Text>
+            </View>
+
+            <View>
+              <Text style={styles.nomeDespedida}>
+                Luma
+              </Text>
+
+              <Text style={styles.textoDespedida}>
+                Nos vemos lá dentro.
+              </Text>
+            </View>
+          </Animated.View>
+        ) : null}
       </LinearGradient>
-    </View>
+    </Animated.View>
   );
 }
 
 function ItemConcluido({
   titulo,
-  descricao,
   icone,
   animacao,
 }: ItemConcluidoProps) {
@@ -587,31 +717,50 @@ function ItemConcluido({
       <View style={styles.iconeEtapa}>
         <Ionicons
           name={icone}
-          size={21}
-          color={Cores.primaria}
+          size={20}
+          color={Cores.fundo}
         />
       </View>
 
-      <View style={styles.conteudoEtapa}>
-        <Text style={styles.tituloEtapa}>
-          {titulo}
-        </Text>
+      <Text style={styles.tituloEtapa}>
+        {titulo}
+      </Text>
 
-        <Text style={styles.descricaoEtapa}>
-          {descricao}
-        </Text>
-      </View>
-
-      <Ionicons
-        name="checkmark-circle"
-        size={24}
-        color={Cores.sucesso}
-      />
+      <Animated.View
+        style={[
+          styles.checkEtapa,
+          {
+            transform: [
+              {
+                scale: animacao,
+              },
+            ],
+          },
+        ]}
+      >
+        <Ionicons
+          name="checkmark"
+          size={15}
+          color={Cores.primariaEscura}
+        />
+      </Animated.View>
     </Animated.View>
   );
 }
 
 function criarAnimacaoEntrada(
+  valor: Animated.Value,
+  duracao: number,
+) {
+  return Animated.timing(valor, {
+    toValue: 1,
+    duration: duracao,
+    easing: Easing.out(Easing.cubic),
+    useNativeDriver: true,
+  });
+}
+
+function criarAnimacaoEntradaLateral(
   valor: Animated.Value,
   duracao: number,
 ) {
@@ -655,7 +804,7 @@ function obterEstiloEntrada(
       {
         translateY: valor.interpolate({
           inputRange: [0, 1],
-          outputRange: [24, 0],
+          outputRange: [22, 0],
         }),
       },
     ],
@@ -672,7 +821,7 @@ function obterEstiloEntradaLateral(
       {
         translateX: valor.interpolate({
           inputRange: [0, 1],
-          outputRange: [-45, 0],
+          outputRange: [-35, 0],
         }),
       },
     ],
@@ -697,7 +846,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
 
     width: '100%',
-    maxWidth: 540,
+    maxWidth: 520,
 
     alignSelf: 'center',
 
@@ -705,9 +854,9 @@ const styles = StyleSheet.create({
       Espacamentos.margemHorizontal,
 
     paddingTop:
-      Platform.OS === 'android' ? 70 : 58,
+      Platform.OS === 'android' ? 64 : 52,
 
-    paddingBottom: 100,
+    paddingBottom: 90,
   },
 
   fundoDecorativo: {
@@ -715,30 +864,97 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
 
+  formaSuperior: {
+    position: 'absolute',
+
+    width: 330,
+    height: 330,
+
+    top: -185,
+    right: -120,
+
+    borderRadius: Bordas.circular,
+
+    backgroundColor:
+      'rgba(255,255,255,0.08)',
+  },
+
+  formaInferior: {
+    position: 'absolute',
+
+    width: 380,
+    height: 380,
+
+    bottom: -265,
+    left: -210,
+
+    borderRadius: Bordas.circular,
+
+    backgroundColor:
+      'rgba(255,255,255,0.07)',
+  },
+
+  bolha: {
+    position: 'absolute',
+
+    borderRadius: Bordas.circular,
+    borderWidth: 1,
+
+    borderColor:
+      'rgba(255,255,255,0.20)',
+
+    backgroundColor:
+      'rgba(255,255,255,0.07)',
+  },
+
+  bolhaUm: {
+    width: 22,
+    height: 22,
+
+    top: '25%',
+    left: '12%',
+  },
+
+  bolhaDois: {
+    width: 44,
+    height: 44,
+
+    top: '74%',
+    right: '9%',
+  },
+
+  bolhaTres: {
+    width: 14,
+    height: 14,
+
+    top: '52%',
+    right: '18%',
+  },
+
   areaConfirmacao: {
-    height: 180,
+    height: 165,
 
     alignItems: 'center',
     justifyContent: 'center',
 
-    marginBottom: 4,
+    marginBottom: -3,
   },
 
   brilhoCirculo: {
     position: 'absolute',
 
-    width: 172,
-    height: 172,
+    width: 165,
+    height: 165,
 
     borderRadius: Bordas.circular,
 
     backgroundColor:
-      'rgba(255, 255, 255, 0.16)',
+      'rgba(255,255,255,0.16)',
   },
 
   circuloExterno: {
-    width: 145,
-    height: 145,
+    width: 138,
+    height: 138,
 
     alignItems: 'center',
     justifyContent: 'center',
@@ -747,15 +963,15 @@ const styles = StyleSheet.create({
 
     borderWidth: 1.5,
     borderColor:
-      'rgba(255, 255, 255, 0.42)',
+      'rgba(255,255,255,0.42)',
 
     backgroundColor:
-      'rgba(255, 255, 255, 0.14)',
+      'rgba(255,255,255,0.13)',
   },
 
   circuloInterno: {
-    width: 110,
-    height: 110,
+    width: 104,
+    height: 104,
 
     alignItems: 'center',
     justifyContent: 'center',
@@ -763,7 +979,7 @@ const styles = StyleSheet.create({
     borderRadius: Bordas.circular,
 
     backgroundColor:
-      'rgba(255, 255, 255, 0.18)',
+      'rgba(255,255,255,0.18)',
   },
 
   saudacao: {
@@ -772,14 +988,15 @@ const styles = StyleSheet.create({
 
     textAlign: 'center',
 
-    color: 'rgba(255, 255, 255, 0.90)',
+    color:
+      'rgba(255,255,255,0.90)',
   },
 
   titulo: {
-    marginTop: 7,
+    marginTop: 6,
 
-    fontSize: 34,
-    lineHeight: 40,
+    fontSize: 35,
+    lineHeight: 41,
 
     fontWeight: Tipografia.pesoBlack,
 
@@ -791,223 +1008,381 @@ const styles = StyleSheet.create({
   },
 
   descricao: {
-    maxWidth: 390,
+    marginTop: 9,
 
-    alignSelf: 'center',
+    fontSize: Tipografia.textoPequeno,
+    lineHeight: 21,
 
-    marginTop: 10,
-    marginBottom: Espacamentos.grande,
+    textAlign: 'center',
+
+    color:
+      'rgba(255,255,255,0.86)',
+  },
+
+  areaLuma: {
+    alignItems: 'center',
+
+    marginTop: 32,
+    paddingHorizontal: 16,
+  },
+
+  avatarLuma: {
+    width: 54,
+    height: 54,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    borderRadius: Bordas.circular,
+
+    borderWidth: 1,
+    borderColor:
+      'rgba(255,255,255,0.32)',
+
+    backgroundColor:
+      'rgba(255,255,255,0.16)',
+  },
+
+  letraLuma: {
+    fontSize: 24,
+    fontWeight: Tipografia.pesoBlack,
+
+    color: Cores.fundo,
+  },
+
+  nomeLuma: {
+    marginTop: 8,
+
+    fontSize: 12,
+    fontWeight: Tipografia.pesoBlack,
+
+    color:
+      'rgba(255,255,255,0.82)',
+
+    letterSpacing: 0.5,
+  },
+
+  falaLuma: {
+    marginTop: 13,
+
+    fontSize: Tipografia.textoGrande,
+    fontWeight: Tipografia.pesoBlack,
+
+    textAlign: 'center',
+
+    color: Cores.fundo,
+  },
+
+  textoLuma: {
+    maxWidth: 370,
+
+    marginTop: 7,
 
     fontSize: Tipografia.textoPequeno,
     lineHeight: 22,
 
     textAlign: 'center',
 
-    color: 'rgba(255, 255, 255, 0.86)',
+    color:
+      'rgba(255,255,255,0.88)',
   },
 
-  cardConteudo: {
-    width: '100%',
+  divisor: {
+    flexDirection: 'row',
+    alignItems: 'center',
 
-    padding: Espacamentos.paddingPequeno,
+    marginTop: 32,
+    marginBottom: 20,
+  },
 
-    borderRadius: Bordas.extraGrande,
+  linhaDivisor: {
+    flex: 1,
+    height: 1,
 
     backgroundColor:
-      'rgba(255, 255, 255, 0.96)',
+      'rgba(255,255,255,0.20)',
+  },
 
-    ...Sombras.media,
+  textoDivisor: {
+    marginHorizontal: 11,
+
+    fontSize: 9.5,
+    fontWeight: Tipografia.pesoBlack,
+
+    color:
+      'rgba(255,255,255,0.66)',
+
+    letterSpacing: 0.8,
   },
 
   areaEtapas: {
     width: '100%',
 
-    marginTop: Espacamentos.grande,
-
-    gap: Espacamentos.paddingPequeno,
+    paddingHorizontal: 5,
   },
 
   itemEtapa: {
-    width: '100%',
-    minHeight: 76,
+    minHeight: 55,
 
     flexDirection: 'row',
     alignItems: 'center',
 
-    padding: Espacamentos.paddingPequeno,
-
-    borderRadius: Bordas.grande,
-    borderWidth: 1,
-
-    borderColor:
-      'rgba(255, 255, 255, 0.48)',
-
-    backgroundColor:
-      'rgba(255, 255, 255, 0.94)',
-
-    ...Sombras.leve,
+    paddingHorizontal: 7,
   },
 
   iconeEtapa: {
+    width: 38,
+    height: 38,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    borderRadius: Bordas.circular,
+
+    backgroundColor:
+      'rgba(255,255,255,0.14)',
+  },
+
+  tituloEtapa: {
+    flex: 1,
+
+    marginLeft: 13,
+
+    fontSize: Tipografia.textoPequeno,
+    fontWeight: Tipografia.pesoExtraBold,
+
+    color: Cores.fundo,
+  },
+
+  checkEtapa: {
+    width: 25,
+    height: 25,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    borderRadius: Bordas.circular,
+
+    backgroundColor:
+      'rgba(255,255,255,0.90)',
+  },
+
+  linhaEtapas: {
+    width: 1,
+    height: 13,
+
+    marginLeft: 25,
+
+    backgroundColor:
+      'rgba(255,255,255,0.25)',
+  },
+
+  areaSeguranca: {
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    marginTop: 28,
+
+    paddingHorizontal:
+      Espacamentos.paddingMedio,
+
+    paddingVertical:
+      Espacamentos.paddingPequeno,
+
+    borderRadius: Bordas.extraGrande,
+
+    borderWidth: 1,
+
+    borderColor:
+      'rgba(255,255,255,0.22)',
+
+    backgroundColor:
+      'rgba(13,70,128,0.14)',
+  },
+
+  iconeSeguranca: {
     width: 43,
     height: 43,
 
     alignItems: 'center',
     justifyContent: 'center',
 
-    borderRadius: Bordas.grande,
+    borderRadius: Bordas.circular,
 
-    backgroundColor: Cores.primariaClara,
+    backgroundColor:
+      'rgba(255,255,255,0.15)',
   },
 
-  conteudoEtapa: {
+  conteudoSeguranca: {
     flex: 1,
-
-    marginHorizontal:
-      Espacamentos.paddingPequeno,
+    marginLeft: 12,
   },
 
-  tituloEtapa: {
-    fontSize: Tipografia.textoPequeno,
+  tituloSeguranca: {
+    fontSize: 13,
     fontWeight: Tipografia.pesoBlack,
 
-    color: Cores.primariaEscura,
+    color: Cores.fundo,
   },
 
-  descricaoEtapa: {
+  textoSeguranca: {
     marginTop: 3,
 
     fontSize: Tipografia.legenda,
     lineHeight: 17,
 
+    color:
+      'rgba(255,255,255,0.76)',
+  },
+
+  areaBotao: {
+    position: 'relative',
+
+    width: '100%',
+
+    marginTop: 29,
+  },
+
+  brilhoBotao: {
+    position: 'absolute',
+
+    left: 10,
+    right: 10,
+    top: 7,
+    bottom: 22,
+
+    borderRadius: Bordas.extraGrande,
+
+    backgroundColor:
+      'rgba(255,255,255,0.50)',
+  },
+
+  botaoEntrar: {
+    minHeight: 70,
+
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+
+    paddingLeft: 22,
+    paddingRight: 11,
+
+    borderRadius: Bordas.extraGrande,
+
+    backgroundColor: Cores.fundo,
+
+    ...Sombras.media,
+  },
+
+  botaoEntrarPressionado: {
+    opacity: 0.87,
+    transform: [{ scale: 0.985 }],
+  },
+
+  botaoEntrarDesativado: {
+    opacity: 0.75,
+  },
+
+  textoBotao: {
+    fontSize: Tipografia.textoGrande,
+    fontWeight: Tipografia.pesoBlack,
+
+    color: Cores.primariaEscura,
+  },
+
+  subtextoBotao: {
+    marginTop: 2,
+
+    fontSize: 11.5,
+
     color: Cores.textoSuave,
   },
 
-  areaFinal: {
-    width: '100%',
-  },
+  areaSeta: {
+    width: 47,
+    height: 47,
 
-  aviso: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-
-    marginTop: Espacamentos.grande,
-    marginBottom: Espacamentos.grande,
-
-    padding: Espacamentos.paddingPequeno,
-
-    borderRadius: Bordas.grande,
-
-    backgroundColor:
-      'rgba(255, 255, 255, 0.92)',
-  },
-
-  textoAviso: {
-    flex: 1,
-
-    marginLeft: 7,
-
-    fontSize: Tipografia.legenda,
-    lineHeight: 17,
-
-    color: Cores.textoSecundario,
-  },
-
-  rodape: {
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
 
-    marginTop: Espacamentos.grande,
+    borderRadius: Bordas.circular,
 
-    paddingHorizontal: 10,
+    backgroundColor: Cores.primaria,
   },
 
-  textoRodape: {
-    flexShrink: 1,
-
-    marginLeft: 7,
+  rodape: {
+    marginTop: 17,
 
     fontSize: 11.5,
 
     textAlign: 'center',
 
     color:
-      'rgba(255, 255, 255, 0.86)',
+      'rgba(255,255,255,0.80)',
   },
 
-  bolha: {
+  mensagemDespedida: {
     position: 'absolute',
 
-    borderRadius: Bordas.circular,
+    left: 22,
+    right: 22,
+    bottom:
+      Platform.OS === 'ios' ? 42 : 25,
+
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    padding: Espacamentos.paddingMedio,
+
+    borderRadius: Bordas.extraGrande,
+
     borderWidth: 1,
-
     borderColor:
-      'rgba(255, 255, 255, 0.18)',
+      'rgba(255,255,255,0.42)',
 
     backgroundColor:
-      'rgba(255, 255, 255, 0.08)',
+      'rgba(15,72,132,0.92)',
+
+    ...Sombras.media,
   },
 
-  bolhaUm: {
-    width: 22,
-    height: 22,
+  avatarDespedida: {
+    width: 43,
+    height: 43,
 
-    top: '28%',
-    left: '14%',
-  },
-
-  bolhaDois: {
-    width: 44,
-    height: 44,
-
-    top: '72%',
-    right: '12%',
-  },
-
-  bolhaTres: {
-    width: 13,
-    height: 13,
-
-    top: '55%',
-    right: '22%',
-  },
-
-  bolhaQuatro: {
-    width: 30,
-    height: 30,
-
-    top: '84%',
-    left: '22%',
-  },
-
-  formaSuperior: {
-    position: 'absolute',
-
-    width: 310,
-    height: 310,
-
-    top: -175,
-    right: -115,
+    alignItems: 'center',
+    justifyContent: 'center',
 
     borderRadius: Bordas.circular,
 
     backgroundColor:
-      'rgba(255, 255, 255, 0.08)',
+      'rgba(255,255,255,0.17)',
   },
 
-  formaInferior: {
-    position: 'absolute',
+  letraDespedida: {
+    fontSize: 20,
+    fontWeight: Tipografia.pesoBlack,
 
-    width: 360,
-    height: 360,
+    color: Cores.fundo,
+  },
 
-    bottom: -230,
-    left: -180,
+  nomeDespedida: {
+    marginLeft: 11,
 
-    borderRadius: Bordas.circular,
+    fontSize: 12,
+    fontWeight: Tipografia.pesoBlack,
 
-    backgroundColor:
-      'rgba(255, 255, 255, 0.07)',
+    color:
+      'rgba(255,255,255,0.78)',
+  },
+
+  textoDespedida: {
+    marginTop: 2,
+    marginLeft: 11,
+
+    fontSize: Tipografia.textoPequeno,
+    fontWeight: Tipografia.pesoExtraBold,
+
+    color: Cores.fundo,
   },
 });

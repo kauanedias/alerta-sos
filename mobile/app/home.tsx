@@ -8,6 +8,7 @@ import { useState } from 'react';
 
 import {
   Alert,
+  Linking,
   Platform,
   Pressable,
   ScrollView,
@@ -32,7 +33,7 @@ export default function HomeScreen() {
 
   const nomePreferido =
     typeof parametros.nome === 'string' &&
-    parametros.nome.trim()
+      parametros.nome.trim()
       ? parametros.nome.trim()
       : 'Kauane';
 
@@ -64,6 +65,93 @@ export default function HomeScreen() {
         },
       ],
     );
+  }
+
+  async function abrirDiscador(
+    numero: string,
+    servico: string,
+  ) {
+    if (Platform.OS === 'web') {
+      Alert.alert(
+        'Recurso disponível no celular',
+        `Abra o AlertaSOS no celular para ligar para ${servico}.`,
+      );
+
+      return;
+    }
+
+    const url = `tel:${numero}`;
+
+    try {
+      const podeAbrir = await Linking.canOpenURL(url);
+
+      if (!podeAbrir) {
+        Alert.alert(
+          'Não foi possível abrir o telefone',
+          `Ligue manualmente para ${numero}.`,
+        );
+
+        return;
+      }
+
+      await Linking.openURL(url);
+    } catch (erro) {
+      console.error(
+        `Erro ao abrir ligação para ${servico}:`,
+        erro,
+      );
+
+      Alert.alert(
+        'Não foi possível iniciar a ligação',
+        `Ligue manualmente para ${numero}.`,
+      );
+    }
+  }
+
+  function confirmarLigacaoPolicia() {
+    Alert.alert(
+      'Ligar para a Polícia Militar?',
+      'O número 190 será colocado no discador do seu celular.',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Abrir discador',
+          onPress: () =>
+            abrirDiscador('190', 'a Polícia Militar'),
+        },
+      ],
+    );
+  }
+
+  function confirmarLigacaoAmbulancia() {
+    Alert.alert(
+      'Ligar para o SAMU?',
+      'O número 192 será colocado no discador do seu celular.',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Abrir discador',
+          onPress: () =>
+            abrirDiscador('192', 'o SAMU'),
+        },
+      ],
+    );
+  }
+
+  function abrirSmartwatch() {
+    router.push({
+      pathname: '/smartwatch',
+
+      params: {
+        nome: nomePreferido,
+      },
+    });
   }
 
   return (
@@ -171,7 +259,7 @@ export default function HomeScreen() {
                   style={({ pressed }) => [
                     styles.botaoSOS,
                     (pressed || sosPressionado) &&
-                      styles.botaoSOSPressionado,
+                    styles.botaoSOSPressionado,
                   ]}
                 >
                   <Text style={styles.textoSOS}>
@@ -227,26 +315,131 @@ export default function HomeScreen() {
             />
 
             <Atalho
-              titulo="Histórico"
-              descricao="Alertas anteriores"
-              icone="time-outline"
-              onPress={() =>
-                console.log('Abrir histórico')
-              }
+              titulo="Polícia"
+              descricao="Ligar para 190"
+              icone="shield-outline"
+              emergencia
+              onPress={confirmarLigacaoPolicia}
             />
 
             <Atalho
-              titulo="Perfil"
-              descricao="Dados e saúde"
-              icone="person-outline"
-              onPress={() =>
-                router.push(
-                  '/configuracao-inicial/perfil-pessoal',
-                )
-              }
+              titulo="Ambulância"
+              descricao="Ligar para 192"
+              icone="medkit-outline"
+              emergencia
+              onPress={confirmarLigacaoAmbulancia}
             />
           </View>
         </View>
+
+        <Pressable
+          onPress={abrirSmartwatch}
+          style={({ pressed }) => [
+            styles.cardSmartwatch,
+            pressed && styles.pressionado,
+          ]}
+        >
+          <LinearGradient
+            colors={[
+              Cores.primaria,
+              Cores.primariaEscura,
+            ]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.gradienteSmartwatch}
+          >
+            <View style={styles.areaIconeSmartwatch}>
+              <Ionicons
+                name="watch-outline"
+                size={29}
+                color={Cores.fundo}
+              />
+            </View>
+
+            <View style={styles.conteudoSmartwatch}>
+              <View style={styles.linhaTituloSmartwatch}>
+                <Text style={styles.tituloSmartwatch}>
+                  Conecte seu smartwatch
+                </Text>
+
+                <View style={styles.seloSmartwatch}>
+                  <Text style={styles.textoSeloSmartwatch}>
+                    NOVO
+                  </Text>
+                </View>
+              </View>
+
+              <Text style={styles.textoSmartwatch}>
+                Prepare alertas pelo pulso e recursos para
+                situações de emergência.
+              </Text>
+
+              <View style={styles.acaoSmartwatch}>
+                <Text style={styles.textoAcaoSmartwatch}>
+                  Conhecer recurso
+                </Text>
+
+                <Ionicons
+                  name="arrow-forward"
+                  size={17}
+                  color={Cores.fundo}
+                />
+              </View>
+            </View>
+          </LinearGradient>
+        </Pressable>
+
+        <Pressable
+          onPress={() => router.push('/medidas-protecao')}
+          style={({ pressed }) => [
+            styles.cardAprender,
+            pressed && styles.pressionado,
+          ]}
+        >
+          <View style={styles.decoracaoAprenderUm} />
+          <View style={styles.decoracaoAprenderDois} />
+
+          <View style={styles.areaIconeAprender}>
+            <Ionicons
+              name="heart-outline"
+              size={28}
+              color={Cores.fundo}
+            />
+          </View>
+
+          <View style={styles.conteudoAprender}>
+            <View style={styles.linhaTituloAprender}>
+              <Text style={styles.tituloAprender}>
+                Aprenda a agir
+              </Text>
+
+              <View style={styles.seloAprender}>
+                <Text style={styles.textoSeloAprender}>
+                  NOVO
+                </Text>
+              </View>
+            </View>
+
+            <Text style={styles.textoAprender}>
+              Orientações rápidas para saber o que fazer
+              enquanto a ajuda está a caminho.
+            </Text>
+
+            <View style={styles.acaoAprender}>
+              <Text style={styles.textoAcaoAprender}>
+                Ver medidas de proteção
+              </Text>
+
+              <View style={styles.setaAprender}>
+                <Ionicons
+                  name="arrow-forward"
+                  size={17}
+                  color={Cores.primariaEscura}
+                />
+              </View>
+            </View>
+          </View>
+        </Pressable>
 
         <Pressable
           onPress={() =>
@@ -257,8 +450,14 @@ export default function HomeScreen() {
             pressed && styles.pressionado,
           ]}
         >
-          <View style={styles.avatarLuma}>
-            <Text style={styles.letraLuma}>L</Text>
+          <View style={styles.areaVisualLuma}>
+            <View style={styles.brillhoLuma} />
+
+            <View style={styles.avatarLuma}>
+              <Text style={styles.letraLuma}>L</Text>
+            </View>
+
+            <View style={styles.statusLumaHome} />
           </View>
 
           <View style={styles.conteudoLuma}>
@@ -267,15 +466,21 @@ export default function HomeScreen() {
             </Text>
 
             <Text style={styles.textoLuma}>
-              Estou aqui para ajudar você.
+              Sua assistente de segurança está por aqui.
+            </Text>
+
+            <Text style={styles.acaoLuma}>
+              Conversar com a Luma
             </Text>
           </View>
 
-          <Ionicons
-            name="chevron-forward"
-            size={21}
-            color={Cores.primaria}
-          />
+          <View style={styles.setaLuma}>
+            <Ionicons
+              name="chevron-forward"
+              size={20}
+              color={Cores.primaria}
+            />
+          </View>
         </Pressable>
       </ScrollView>
 
@@ -338,11 +543,14 @@ export default function HomeScreen() {
 type AtalhoProps = {
   titulo: string;
   descricao: string;
+
   icone:
-    | 'location-outline'
-    | 'people-outline'
-    | 'time-outline'
-    | 'person-outline';
+  | 'location-outline'
+  | 'people-outline'
+  | 'shield-outline'
+  | 'medkit-outline';
+
+  emergencia?: boolean;
   onPress: () => void;
 };
 
@@ -350,6 +558,7 @@ function Atalho({
   titulo,
   descricao,
   icone,
+  emergencia = false,
   onPress,
 }: AtalhoProps) {
   return (
@@ -360,15 +569,30 @@ function Atalho({
         pressed && styles.pressionado,
       ]}
     >
-      <View style={styles.iconeAtalho}>
+      <View
+        style={[
+          styles.iconeAtalho,
+          emergencia && styles.iconeAtalhoEmergencia,
+        ]}
+      >
         <Ionicons
           name={icone}
           size={23}
-          color={Cores.primaria}
+          color={
+            emergencia
+              ? Cores.sos
+              : Cores.primaria
+          }
         />
       </View>
 
-      <Text style={styles.tituloAtalho}>
+      <Text
+        style={[
+          styles.tituloAtalho,
+          emergencia &&
+          styles.tituloAtalhoEmergencia,
+        ]}
+      >
         {titulo}
       </Text>
 
@@ -382,10 +606,10 @@ function Atalho({
 type ItemNavegacaoProps = {
   titulo: string;
   icone:
-    | 'home'
-    | 'time-outline'
-    | 'people-outline'
-    | 'person-outline';
+  | 'home'
+  | 'time-outline'
+  | 'people-outline'
+  | 'person-outline';
   ativo?: boolean;
   onPress: () => void;
 };
@@ -746,6 +970,145 @@ const styles = StyleSheet.create({
     color: Cores.textoSuave,
   },
 
+  cardAprender: {
+    position: 'relative',
+    width: '100%',
+
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    marginBottom: Espacamentos.grande,
+    padding: Espacamentos.paddingMedio,
+
+    borderRadius: Bordas.extraGrande,
+    borderWidth: 1,
+    borderColor: 'rgba(42, 125, 196, 0.18)',
+
+    backgroundColor: '#EAF6FF',
+
+    overflow: 'hidden',
+
+    ...Sombras.media,
+  },
+
+  decoracaoAprenderUm: {
+    position: 'absolute',
+
+    width: 120,
+    height: 120,
+
+    top: -72,
+    right: -42,
+
+    borderRadius: Bordas.circular,
+
+    backgroundColor: 'rgba(61, 146, 216, 0.10)',
+  },
+
+  decoracaoAprenderDois: {
+    position: 'absolute',
+
+    width: 67,
+    height: 67,
+
+    bottom: -40,
+    right: 48,
+
+    borderRadius: Bordas.circular,
+
+    backgroundColor: 'rgba(61, 146, 216, 0.08)',
+  },
+
+  areaIconeAprender: {
+    width: 66,
+    height: 66,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    borderRadius: Bordas.extraGrande,
+
+    backgroundColor: Cores.primaria,
+  },
+
+  conteudoAprender: {
+    flex: 1,
+
+    marginLeft: Espacamentos.paddingMedio,
+  },
+
+  linhaTituloAprender: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+
+    gap: 7,
+  },
+
+  tituloAprender: {
+    fontSize: Tipografia.textoGrande,
+    fontWeight: Tipografia.pesoBlack,
+
+    color: Cores.primariaEscura,
+  },
+
+  seloAprender: {
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+
+    borderRadius: Bordas.circular,
+
+    backgroundColor: Cores.primariaClara,
+  },
+
+  textoSeloAprender: {
+    fontSize: 8.5,
+    fontWeight: Tipografia.pesoBlack,
+
+    color: Cores.primaria,
+
+    letterSpacing: 0.6,
+  },
+
+  textoAprender: {
+    marginTop: 6,
+
+    fontSize: Tipografia.legenda,
+    lineHeight: 18,
+
+    color: Cores.textoSecundario,
+  },
+
+  acaoAprender: {
+    alignSelf: 'flex-start',
+
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    marginTop: 11,
+  },
+
+  textoAcaoAprender: {
+    marginRight: 7,
+
+    fontSize: 11.5,
+    fontWeight: Tipografia.pesoBlack,
+
+    color: Cores.primaria,
+  },
+
+  setaAprender: {
+    width: 27,
+    height: 27,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    borderRadius: Bordas.circular,
+
+    backgroundColor: Cores.fundo,
+  },
+
   cardLuma: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -791,6 +1154,175 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontSize: Tipografia.legenda,
     color: Cores.textoSuave,
+  },
+
+  iconeAtalhoEmergencia: {
+    borderWidth: 1,
+    borderColor: 'rgba(240, 68, 56, 0.16)',
+    backgroundColor: 'rgba(240, 68, 56, 0.08)',
+  },
+
+  tituloAtalhoEmergencia: {
+    color: Cores.sos,
+  },
+
+  cardSmartwatch: {
+    width: '100%',
+
+    marginBottom: Espacamentos.grande,
+
+    borderRadius: Bordas.extraGrande,
+
+    overflow: 'hidden',
+
+    ...Sombras.media,
+  },
+
+  gradienteSmartwatch: {
+    minHeight: 145,
+
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    padding: Espacamentos.paddingMedio,
+  },
+
+  areaIconeSmartwatch: {
+    width: 67,
+    height: 67,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    borderRadius: Bordas.extraGrande,
+
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.28)',
+
+    backgroundColor: 'rgba(255, 255, 255, 0.14)',
+  },
+
+  conteudoSmartwatch: {
+    flex: 1,
+
+    marginLeft: Espacamentos.paddingMedio,
+  },
+
+  linhaTituloSmartwatch: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+
+    gap: 7,
+  },
+
+  tituloSmartwatch: {
+    fontSize: Tipografia.textoGrande,
+    fontWeight: Tipografia.pesoBlack,
+
+    color: Cores.fundo,
+  },
+
+  seloSmartwatch: {
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+
+    borderRadius: Bordas.circular,
+
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+  },
+
+  textoSeloSmartwatch: {
+    fontSize: 8.5,
+    fontWeight: Tipografia.pesoBlack,
+
+    color: Cores.fundo,
+
+    letterSpacing: 0.6,
+  },
+
+  textoSmartwatch: {
+    marginTop: 6,
+
+    fontSize: Tipografia.legenda,
+    lineHeight: 18,
+
+    color: 'rgba(255, 255, 255, 0.84)',
+  },
+
+  acaoSmartwatch: {
+    alignSelf: 'flex-start',
+
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    marginTop: 11,
+  },
+
+  textoAcaoSmartwatch: {
+    marginRight: 6,
+
+    fontSize: 11.5,
+    fontWeight: Tipografia.pesoBlack,
+
+    color: Cores.fundo,
+  },
+
+  areaVisualLuma: {
+    width: 55,
+    height: 55,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  brillhoLuma: {
+    position: 'absolute',
+
+    width: 55,
+    height: 55,
+
+    borderRadius: Bordas.circular,
+
+    backgroundColor: Cores.primariaClara,
+  },
+
+  statusLumaHome: {
+    position: 'absolute',
+
+    width: 12,
+    height: 12,
+
+    right: 1,
+    bottom: 2,
+
+    borderRadius: Bordas.circular,
+
+    borderWidth: 2,
+    borderColor: Cores.fundo,
+
+    backgroundColor: Cores.sucesso,
+  },
+
+  acaoLuma: {
+    marginTop: 7,
+
+    fontSize: 11.5,
+    fontWeight: Tipografia.pesoBlack,
+
+    color: Cores.primaria,
+  },
+
+  setaLuma: {
+    width: 37,
+    height: 37,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    borderRadius: Bordas.circular,
+
+    backgroundColor: Cores.fundo,
   },
 
   navegacaoInferior: {
