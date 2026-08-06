@@ -183,3 +183,25 @@
 - Iniciar a construção da API.
 - Configurar Node.js, Express, TypeScript e Prisma.
 - Conectar a API ao MySQL.
+
+
+```md
+## 06/08/2026
+
+### Concluído
+
+- Criação da estrutura inicial da API.
+- Configuração do Node.js.
+- Instalação do Express.
+- Configuração do TypeScript.
+- Configuração do servidor Express.
+- Implementação da primeira rota (`GET /`).
+- Separação inicial das rotas em `routes/index.ts`.
+- Organização da arquitetura inicial do backend.
+- Instalação da biblioteca `mysql2`.
+
+### Próximo passo
+
+- Configurar a conexão com o MySQL.
+- Criar a primeira tabela da aplicação.
+- Implementar o módulo de usuários.
