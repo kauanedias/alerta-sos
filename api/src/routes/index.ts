@@ -1,11 +1,13 @@
 import { Router } from 'express';
 
-const routes = Router();
+import statusRoutes from './status.routes';
+import usuariosRoutes from './usuarios.routes';
+import autenticacaoRoutes from './autenticacao.routes';
 
-routes.get('/', (request, response) => {
-  return response.status(200).json({
-    mensagem: 'API do AlertaSOS funcionando!',
-  });
-});
+const router = Router();
 
-export { routes };
+router.use(statusRoutes);
+router.use(usuariosRoutes);
+router.use(autenticacaoRoutes);
+
+export default router;

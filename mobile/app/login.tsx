@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { salvarSessao } from '../src/services/sessao';
 import {
   Animated,
   Easing,
@@ -32,6 +33,9 @@ import {
   Tipografia,
 } from '../src/tema';
 
+import { Alert } from 'react-native';
+import { http } from '../src/services/http';
+
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -44,66 +48,66 @@ export default function LoginScreen() {
   const animacaoCard = useRef(new Animated.Value(0)).current;
   const animacaoLogo = useRef(new Animated.Value(1)).current;
 
-  useEffect(() => { 
+  useEffect(() => {
     esconderOlhoAutomaticoDoNavegador();
 
-  Animated.stagger(180, [
-    Animated.timing(animacaoCabecalho, {
-      toValue: 1,
-      duration: 700,
-      easing: Easing.out(Easing.cubic),
-      useNativeDriver: true,
-    }),
-
-    Animated.timing(animacaoCard, {
-      toValue: 1,
-      duration: 750,
-      easing: Easing.out(Easing.cubic),
-      useNativeDriver: true,
-    }),
-  ]).start();
-
-  Animated.loop(
-    Animated.sequence([
-      Animated.timing(animacaoLogo, {
-        toValue: 1.05,
-        duration: 1800,
-        easing: Easing.inOut(Easing.sin),
-        useNativeDriver: true,
-      }),
-
-      Animated.timing(animacaoLogo, {
+    Animated.stagger(180, [
+      Animated.timing(animacaoCabecalho, {
         toValue: 1,
-        duration: 1800,
-        easing: Easing.inOut(Easing.sin),
+        duration: 700,
+        easing: Easing.out(Easing.cubic),
         useNativeDriver: true,
       }),
-    ]),
-  ).start();
-}, []);
 
-function esconderOlhoAutomaticoDoNavegador() {
-  if (Platform.OS !== 'web') {
-    return;
-  }
+      Animated.timing(animacaoCard, {
+        toValue: 1,
+        duration: 750,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+    ]).start();
 
-  const documento = globalThis.document;
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(animacaoLogo, {
+          toValue: 1.05,
+          duration: 1800,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: true,
+        }),
 
-  if (!documento) {
-    return;
-  }
+        Animated.timing(animacaoLogo, {
+          toValue: 1,
+          duration: 1800,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  }, []);
 
-  const idEstilo = 'ocultar-olho-nativo-senha';
+  function esconderOlhoAutomaticoDoNavegador() {
+    if (Platform.OS !== 'web') {
+      return;
+    }
 
-  if (documento.getElementById(idEstilo)) {
-    return;
-  }
+    const documento = globalThis.document;
 
-  const estilo = documento.createElement('style');
+    if (!documento) {
+      return;
+    }
 
-  estilo.id = idEstilo;
+    const idEstilo = 'ocultar-olho-nativo-senha';
 
-  estilo.innerHTML = `
+    if (documento.getElementById(idEstilo)) {
+      return;
+    }
+
+    const estilo = documento.createElement('style');
+
+    estilo.id = idEstilo;
+
+    estilo.innerHTML = `
     input::-ms-reveal,
     input::-ms-clear {
       display: none !important;
@@ -117,8 +121,8 @@ function esconderOlhoAutomaticoDoNavegador() {
     }
   `;
 
-  documento.head.appendChild(estilo);
-}
+    documento.head.appendChild(estilo);
+  }
 
   function validarEmail(valor: string) {
     const formatado = valor.trim();
@@ -152,19 +156,41 @@ function esconderOlhoAutomaticoDoNavegador() {
     setErroSenha('');
     return true;
   }
-
-  function entrar() {
+  async function entrar() {
     const emailValido = validarEmail(email);
     const senhaValida = validarSenha(senha);
 
-    if (!emailValido || !senhaValida) return;
+    if (!emailValido || !senhaValida) {
+      return;
+    }
 
-    setCarregando(true);
+    try {
+      setCarregando(true);
 
-    setTimeout(() => {
+      const resposta = await http.post('/login', {
+        email,
+        senha,
+      });
+
+      await salvarSessao(
+        resposta.data.token,
+        resposta.data.usuario
+      );
+
+      console.log(resposta.data);
+
+      router.replace('/home');
+
+    } catch (error: any) {
+
+      Alert.alert(
+        'Erro',
+        error?.response?.data?.mensagem || 'Não foi possível realizar o login.'
+      );
+
+    } finally {
       setCarregando(false);
-      console.log({ email, lembrarDeMim });
-    }, 1500);
+    }
   }
 
   return (

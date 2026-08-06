@@ -186,22 +186,25 @@
 
 
 ```md
+
 ## 06/08/2026
 
 ### Concluído
 
-- Criação da estrutura inicial da API.
-- Configuração do Node.js.
-- Instalação do Express.
-- Configuração do TypeScript.
-- Configuração do servidor Express.
-- Implementação da primeira rota (`GET /`).
-- Separação inicial das rotas em `routes/index.ts`.
-- Organização da arquitetura inicial do backend.
-- Instalação da biblioteca `mysql2`.
+- Configuração da API com Express e TypeScript.
+- Integração da API com o MySQL.
+- Criação da tabela `usuarios`.
+- Conexão da API com o banco de dados.
+- Criação do primeiro endpoint de status.
+- Implementação do cadastro de usuários.
+- Criptografia de senhas com bcrypt.
+- Implementação do login com JWT.
+- Organização da arquitetura em controllers, models e routes.
+- Integração do aplicativo React Native com a API.
+- Login funcionando no Android utilizando a API e o MySQL.
 
 ### Próximo passo
 
-- Configurar a conexão com o MySQL.
-- Criar a primeira tabela da aplicação.
-- Implementar o módulo de usuários.
+- Persistência da sessão do usuário.
+- Abrir diretamente na Home quando houver um usuário autenticado.
+- Integração do cadastro do aplicativo com a API.
