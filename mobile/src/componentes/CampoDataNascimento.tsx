@@ -34,7 +34,7 @@ export function CampoDataNascimento({
   const [mostrarSeletor, setMostrarSeletor] =
     useState(false);
 
-  const dataTemporaria = valor ?? new Date(2000, 0, 1);
+  const dataTemporaria = valor ?? new Date(2006, 0, 1);
 
   function formatarData(data?: Date) {
     if (!data) {
@@ -119,14 +119,12 @@ export function CampoDataNascimento({
         <DateTimePicker
           value={dataTemporaria}
           mode="date"
-          display={
-            Platform.OS === 'ios'
-              ? 'spinner'
-              : 'default'
-          }
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           maximumDate={new Date()}
           minimumDate={new Date(1900, 0, 1)}
           onChange={selecionarData}
+          textColor={Platform.OS === 'ios' ? Cores.textoEscuro : undefined}
+          themeVariant={Platform.OS === 'ios' ? 'light' : undefined}
         />
       ) : null}
 

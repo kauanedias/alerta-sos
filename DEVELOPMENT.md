@@ -187,6 +187,8 @@
 
 ```md
 
+# API 
+
 ## 06/08/2026
 
 ### Concluído
@@ -208,3 +210,28 @@
 - Persistência da sessão do usuário.
 - Abrir diretamente na Home quando houver um usuário autenticado.
 - Integração do cadastro do aplicativo com a API.
+
+
+
+## 08/08/2026
+
+### Concluído
+
+- Reorganização do banco de dados, separando conta e perfil pessoal.
+- Criação da tabela `perfil_pessoal`.
+- Ajuste da tabela `usuarios` para autenticação e verificação.
+- Implementação do envio de código de verificação por e-mail.
+- Implementação da confirmação e reenvio do código.
+- Integração do cadastro e da verificação de e-mail com o aplicativo.
+- Configuração do Nodemailer para envio real de e-mails.
+- Configuração do `expo-secure-store`.
+- Persistência do fluxo de cadastro ao sair e retornar ao aplicativo.
+- Retomada automática da verificação ou configuração inicial.
+- Correção do seletor de data de nascimento no iOS.
+- Teste da criação do perfil pessoal pela API e MySQL.
+
+### Próximo passo
+
+- Integrar a tela de Perfil Pessoal com a API.
+- Salvar os dados do Perfil Pessoal no MySQL pelo aplicativo.
+- Continuar a integração das próximas etapas da configuração inicial.

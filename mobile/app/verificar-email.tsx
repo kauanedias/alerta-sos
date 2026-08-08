@@ -2,6 +2,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { Alert } from 'react-native';
+import { http } from '../src/services/http';
+import {
+  obterEmailVerificacao,
+  salvarEtapaCadastro,
+} from '../src/services/sessao';
 
 import {
   Animated,
@@ -36,10 +42,11 @@ export default function VerificarEmailScreen() {
     email?: string;
   }>();
 
-  const emailRecebido =
+  const [emailRecebido, setEmailRecebido] = useState(
     typeof parametros.email === 'string'
       ? parametros.email
-      : 'seu e-mail';
+      : '',
+  );
 
   const [codigo, setCodigo] = useState(
     Array.from({ length: 6 }, () => ''),
@@ -54,6 +61,22 @@ export default function VerificarEmailScreen() {
   const entradaCard = useRef(
     new Animated.Value(0),
   ).current;
+
+  useEffect(() => {
+    async function carregarEmail() {
+      if (emailRecebido) {
+        return;
+      }
+
+      const emailSalvo = await obterEmailVerificacao();
+
+      if (emailSalvo) {
+        setEmailRecebido(emailSalvo);
+      }
+    }
+
+    carregarEmail();
+  }, [emailRecebido]);
 
   useEffect(() => {
     Animated.timing(entradaCard, {
@@ -92,51 +115,60 @@ export default function VerificarEmailScreen() {
     }
   }
 
-  function verificarCodigo() {
+  async function verificarCodigo() {
     if (!codigoCompleto()) {
       setErro('Digite os 6 números enviados ao seu e-mail.');
       return;
     }
 
-    setCarregando(true);
+    try {
+      setCarregando(true);
+      setErro('');
 
-    const codigoDigitado = codigo.join('');
+      const codigoDigitado = codigo.join('');
 
-    // simulação temporária até conectarmos a api
-    setTimeout(() => {
-      setCarregando(false);
-
-      console.log({
-        email: emailRecebido,
+      await http.post('/verificacao-email/confirmar', {
+        email: emailRecebido.trim().toLowerCase(),
         codigo: codigoDigitado,
       });
 
-      // temporariamente, qualquer código de 6 dígitos será aceito
-      // futuramente a api fará a validação real
+      await salvarEtapaCadastro('configuracao-inicial');
 
-      // próxima etapa:
       router.replace('/configuracao-inicial/boas-vindas');
-    }, 1500);
+    } catch (error: any) {
+      setErro(
+        error?.response?.data?.mensagem ||
+        'Não foi possível verificar o código.',
+      );
+    } finally {
+      setCarregando(false);
+    }
   }
 
-  function reenviarCodigo() {
+  async function reenviarCodigo() {
     if (segundosRestantes > 0 || reenviando) {
       return;
     }
 
-    setReenviando(true);
-    setErro('');
+    try {
+      setReenviando(true);
+      setErro('');
 
-    // simulação temporária do reenvio
-    setTimeout(() => {
-      setReenviando(false);
+      await http.post('/verificacao-email/enviar', {
+        email: emailRecebido.trim().toLowerCase(),
+      });
+
       setSegundosRestantes(TEMPO_REENVIO);
       setCodigo(Array.from({ length: 6 }, () => ''));
-
-      console.log(
-        `Novo código enviado para ${emailRecebido}`,
+    } catch (error: any) {
+      Alert.alert(
+        'Erro',
+        error?.response?.data?.mensagem ||
+        'Não foi possível reenviar o código.',
       );
-    }, 1200);
+    } finally {
+      setReenviando(false);
+    }
   }
 
   function formatarTempo(segundos: number) {
@@ -355,8 +387,8 @@ export default function VerificarEmailScreen() {
                     style={({ pressed }) => [
                       styles.botaoReenviar,
                       pressed &&
-                        !reenviando &&
-                        styles.elementoPressionado,
+                      !reenviando &&
+                      styles.elementoPressionado,
                     ]}
                   >
                     {reenviando ? (

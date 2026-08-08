@@ -2,6 +2,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { Alert } from 'react-native';
+import { http } from '../src/services/http';
+
+import {
+  salvarEmailVerificacao,
+  salvarEtapaCadastro,
+} from '../src/services/sessao';
 
 import {
   Animated,
@@ -186,15 +193,13 @@ export default function CadastroScreen() {
     return true;
   }
 
-  function cadastrar() {
-    const nomeValido = validarNome(nome);
+  async function cadastrar() {
     const emailValido = validarEmail(email);
     const senhaValida = validarSenha(senha);
     const confirmacaoValida = validarConfirmacao(confirmarSenha);
     const termosValidos = validarTermos();
 
     if (
-      !nomeValido ||
       !emailValido ||
       !senhaValida ||
       !confirmacaoValida ||
@@ -203,24 +208,39 @@ export default function CadastroScreen() {
       return;
     }
 
-    setCarregando(true);
+    try {
+      setCarregando(true);
 
-    // Simulação temporária até conectarmos a API.
-    setTimeout(() => {
-      setCarregando(false);
-
-      console.log({
-        nome: nome.trim(),
-        email: email.trim(),
+      await http.post('/usuarios', {
+        email: email.trim().toLowerCase(),
+        senha,
       });
+
+      await http.post('/verificacao-email/enviar', {
+        email: email.trim().toLowerCase(),
+      });
+
+      await salvarEmailVerificacao(
+        email.trim().toLowerCase(),
+      );
+
+      await salvarEtapaCadastro('verificar-email');
 
       router.replace({
         pathname: '/verificar-email',
         params: {
-          email: email.trim(),
+          email: email.trim().toLowerCase(),
         },
       });
-    }, 1600);
+    } catch (error: any) {
+      Alert.alert(
+        'Erro',
+        error?.response?.data?.mensagem ||
+        'Não foi possível criar sua conta.',
+      );
+    } finally {
+      setCarregando(false);
+    }
   }
 
   return (
